@@ -1,0 +1,15 @@
+.cta-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cta-container span {
+    text-align: center;
+    font-feature-settings: 'dlig' on;
+    font-family: Manrope;
+    font-size: 0.8rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.5rem;
+}

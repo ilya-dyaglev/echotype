@@ -1,0 +1,50 @@
+.btn {
+    width: 5.75rem;
+    height: 1.5rem;
+    min-width: 5.25rem;
+    max-width: 30rem;
+    padding: 0rem 1rem;
+    border: none;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    background-color: #293032;
+    transition: background-color 0.3s ease;
+    outline: none;
+}
+
+.btn-label {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    align-self: stretch;
+    overflow: hidden;
+    font-feature-settings: 'dlig' on;
+    text-overflow: ellipsis;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.3125rem;
+}
+
+.btn.primary {
+    background-color: #fff;
+    color: #1c2126;
+}
+
+.btn.secondary {
+    background-color: #283038;
+    color: #fff;
+}
+
+.btn:hover:enabled {
+    opacity: 0.8;
+}
+
+.btn:focus {
+    outline: none;
+}
+
+.btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+

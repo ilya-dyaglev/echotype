@@ -1,0 +1,44 @@
+.footer {
+    display: flex;
+    width: inherit; 
+    padding: 0.625rem 0rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.footer .copyright-container {
+    display: flex;
+    width: 9.8rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer .label {
+    text-align: center;
+    font-feature-settings: 'dlig' on;
+    font-family: Manrope;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5rem;
+}
+
+.footer span {
+    font-feature-settings: 'dlig' on;
+    font-family: Manrope;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.5rem;
+}
+
+
+.footer .footer-image-icon {
+    display:inline-block;
+    background: url('../assets/footer-image-icon.jpeg') lightgray 50% / cover no-repeat;
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+    border-radius: 1.25rem;
+}
+

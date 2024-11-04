@@ -1,0 +1,26 @@
+.typing-area {
+    display: flex;
+    width: 100%; 
+    height: 25rem;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    gap: 0.9375rem 0rem;
+    flex-wrap: wrap;
+    border-radius: 0.75rem;
+    border: 1px solid #3B4A54;
+    background: #1C2126;
+}
+
+.text-data {
+    padding: 0.94rem;
+    color: #E5E8EB;
+    font-feature-settings: 'dlig' on;
+    font-family: Manrope;
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 2.58rem;
+}
+
+
