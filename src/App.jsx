@@ -4,9 +4,10 @@ import Main from './components/Main.jsx';
 import Footer from './components/Footer.jsx';
 import { useState } from 'react';
 import {generateClient} from 'aws-amplify/data';
-/**
- * @type {import('aws-amplify/data').Client<import('../amplify/data/resource').Schema>}
- */
+import {Amplify} from 'aws-amplify';
+import outputs from "../amplify_outputs.json"
+
+Amplify.configure(outputs);
 
 const client = generateClient();
 

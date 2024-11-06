@@ -3,6 +3,7 @@ import OpenAI from 'openai';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
 import AWS from 'aws-sdk';
+import {json} from "react-router-dom";
 
 // Load environment variables
 dotenv.config();
@@ -100,6 +101,9 @@ export const handler: Handler = async (): Promise<string> => {
         });
 
         const jsonResponse = JSON.parse(<string>response.choices[0].message.content);
+
+        jsonResponse.bookId = bookId;
+
         console.log("JSON response:", jsonResponse);
 
         // Store the book data in DynamoDB
