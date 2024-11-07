@@ -1,26 +1,20 @@
 import '../styles/Header.css';
-import { useState } from 'react';
 import ControlBar from './ControlBar';
 import CTA from './CTA';
-import { fetchTypingText } from '../api';
+import { fetchTypingText } from '../api.ts';
 
 interface HeaderProps {
-    setActiveMode: (mode: string) => void;
+    setActiveMode: (mode: 'short' | 'medium' | 'long') => void;
     setTextData: (text: string) => void;
-    setFetchedData: (data: Record<string, any>) => void; // Added setFetchedData prop
+    setFetchedData: (data: Record<string, any>) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ setActiveMode, setTextData, setFetchedData }) => {
-    const [textDataLocal, setTextDataLocal] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    const handleButtonClick = async (activeMode: string) => {
+    const handleButtonClick = async (activeMode: 'short' | 'medium' | 'long') => {
         setActiveMode(activeMode);
-        setLoading(true);
         console.log('start');
         try {
             const fetchedText = await fetchTypingText(activeMode);
-            setTextDataLocal(fetchedText);
             setTextData(fetchedText);
             console.log(fetchedText);
 
@@ -32,7 +26,6 @@ const Header: React.FC<HeaderProps> = ({ setActiveMode, setTextData, setFetchedD
             setTextData('Failed to fetch text data.');
         } finally {
             console.log('done');
-            setLoading(false);
         }
     };
 

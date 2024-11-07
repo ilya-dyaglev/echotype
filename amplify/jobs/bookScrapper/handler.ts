@@ -4,10 +4,10 @@ import fetch from 'node-fetch';
 import AWS from 'aws-sdk';
 import {env} from "$amplify/env/bookScrapper";
 
-// Get the OpenAI API key from environment variables
+// Get the OpenAI Api key from environment variables
 const apiKey = env.GPT_API_SECRET || '';
 if (!apiKey) {
-    throw new Error("API key is missing. Ensure GPT_API_SECRET is set in .env file.");
+    throw new Error("Api key is missing. Ensure GPT_API_SECRET is set in .env file.");
 }
 
 // Set up the DynamoDB DocumentClient
@@ -86,7 +86,7 @@ export const handler: Handler = async (): Promise<string> => {
 
         const openai = new OpenAI({ apiKey });
 
-        const systemMessage = "You are an API that returns JSON book content formatted for DynamoDB.";
+        const systemMessage = "You are an Api that returns JSON book content formatted for DynamoDB.";
         const userMessage = `Provide the book's metadata and categorized quotes as JSON according to the provided schema. Use the following sample content: ${bookContentSample}`;
 
         const response = await openai.chat.completions.create({

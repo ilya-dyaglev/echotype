@@ -3,9 +3,10 @@ import Header from './components/Header.tsx';
 import Main from './components/Main';
 import Footer from './components/Footer';
 import { useState, useEffect } from 'react';
-import { generateClient } from '@aws-amplify/data';
+import type {Schema} from '../amplify/data/resource.ts';
+import { generateClient } from 'aws-amplify/data';
 
-const client = generateClient();
+const client = generateClient<Schema>();
 
 function App() {
     const [activeMode, setActiveMode] = useState('short');

@@ -4,7 +4,7 @@ const API = axios.create({
   baseURL: 'https://api.quotable.io',
 });
 
-export const fetchTypingText = async (mode) => {
+export const fetchTypingText = async (mode: 'short' | 'medium' | 'long'): Promise<string> => {
   let minLength = 150;
   let maxLength = 0; // No maximum by default (Long)
 
@@ -15,11 +15,10 @@ export const fetchTypingText = async (mode) => {
     minLength = 50;
     maxLength = 150;
   } else if (mode === 'long') {
-      minLength = 150;
+    minLength = 150;
   }
 
-  // Fetch a random quote based on the length criteria
-  const response = await API.get(`/random`, {
+  const response = await API.get<{ content: string }>('/random', {
     params: { minLength, maxLength },
   });
 

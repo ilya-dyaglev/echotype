@@ -25,16 +25,16 @@ const schema = a
             .handler(a.handler.function(bookScrapper).async())
             .authorization(allow => [allow.publicApiKey()])
     })
-    .authorization((allow) => [allow.publicApiKey()]) // Allow public access using API key (for demo)
+    .authorization((allow) => [allow.publicApiKey()]) // Allow public access using Api key (for demo)
 
 export type Schema = ClientSchema<typeof schema>;
 
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: "apiKey", // Use API key for authorization
+    defaultAuthorizationMode: "apiKey", // Use Api key for authorization
     apiKeyAuthorizationMode: {
-      expiresInDays: 30, // Set API key to expire in 30 days
+      expiresInDays: 30, // Set Api key to expire in 30 days
     },
   },
 });
@@ -46,6 +46,6 @@ export const data = defineData({
   - **smallQuotes**, **mediumQuotes**, **largeQuotes**: Arrays of strings to store categorized quotes, each marked as required.
 - **identifier**: Set `bookId` as the custom identifier for each record.
 - **Authorization**:
-  - **publicApiKey()**: Allow public access using an API key.
-  - Set up an API key authorization mode that expires in 30 days.
+  - **publicApiKey()**: Allow public access using an Api key.
+  - Set up an Api key authorization mode that expires in 30 days.
 =========================================================================*/

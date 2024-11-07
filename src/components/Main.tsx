@@ -3,16 +3,16 @@ import ProgressContainer from './ProgressContainer';
 import TypingArea from './TypingArea';
 
 interface MainProps {
-    activeMode: string;
+    activeMode: string; // Not used directly in this component
     textData: string;
-    fetchedData: Record<string, any>; // Direct JSON object from App
+    fetchedData: Record<string, any>;
 }
 
-function Main({ activeMode, textData, fetchedData }: MainProps) {
+function Main({ textData, fetchedData }: MainProps) {
     return (
         <div className="main">
             <ProgressContainer currentNum={1} endNum={101} />
-            <TypingArea activeMode={activeMode} textData={textData} />
+            <TypingArea textData={textData} />
             <div>
                 <pre>{JSON.stringify(fetchedData, null, 2)}</pre>
             </div>
