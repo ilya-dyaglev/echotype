@@ -1,13 +1,16 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import {bookScrapper} from "../jobs/bookScrapper/resource";
 
 const schema = a
     .schema({
       BookMetadata: a
           .model({
             bookId: a.id().required(), // Unique identifier for each book
+            sourceId: a.integer().required(),
+              sourceUrl: a.string().required(),
             title: a.string().required(), // Title of the book
             author: a.string().required(), // Author of the book
-            releaseDate: a.string().required(), // Release date in ISO 8601 format
+            releaseDate: a.datetime().required(), // Release date in ISO 8601 format
             language: a.string().required(), // Language of the book
             license: a.string().required(), // License type of the book
             smallQuotes: a.string().array().required(), // Short quotes (50-100 characters)
@@ -15,8 +18,14 @@ const schema = a
             largeQuotes: a.string().array().required(), // Long quotes (>200 characters)
           })
           .identifier(["bookId"]), // Set bookId as the identifier
+
+        UpdateDynamoDB: a
+            .mutation()
+            .returns(a.ref('BookMetadata'))
+            .handler(a.handler.function(bookScrapper).async())
+            .authorization(allow => [allow.publicApiKey()])
     })
-    .authorization((allow) => [allow.publicApiKey()]); // Allow public access using API key (for demo)
+    .authorization((allow) => [allow.publicApiKey()]) // Allow public access using API key (for demo)
 
 export type Schema = ClientSchema<typeof schema>;
 
