@@ -1,5 +1,5 @@
 import { defineFunction } from '@aws-amplify/backend-function';
-import {secret} from "@aws-amplify/backend";
+import { secret } from "@aws-amplify/backend";
 
 const GPT_API_SECRET = secret('GPT_API_SECRET') ?? "";
 const DYNAMODB_TABLE_NAME = secret('DYNAMODB_TABLE_NAME') ?? "";
@@ -27,5 +27,5 @@ export const bookScrapper = defineFunction({
         DYNAMODB_TABLE_NAME,
         TABLE_NAME_LOCAL
     },
-    timeoutSeconds: 60
+    timeoutSeconds: 120
 })

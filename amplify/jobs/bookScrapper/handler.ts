@@ -25,8 +25,6 @@ const jsonSchema = {
     schema: {
         type: "object",
         properties: {
-            bookId: {type: "string", description: "The unique identifier for the book, should be a string"},
-            sourceId: { type: "number", description: "The unique identifier for the source id of the book" },
             title: { type: "string", description: "The title of the book" },
             author: { type: "string", description: "The author of the book" },
             releaseDate: { type: "string", description: "The release date in ISO 8601 format" },
@@ -35,21 +33,21 @@ const jsonSchema = {
             smallQuotes: {
                 type: "array",
                 items: { type: "string" },
-                description: "Short quotes (200-250 characters)",
+                description: "quotes (200-250 characters per quote)",
             },
             mediumQuotes: {
                 type: "array",
                 items: { type: "string" },
-                description: "Medium quotes (300-500 characters)",
+                description: "quotes (300-500 characters per quote)",
             },
             largeQuotes: {
                 type: "array",
                 items: { type: "string" },
-                description: "Long quotes (>500 characters)",
+                description: "quotes (>500 characters per quote)",
             },
         },
         additionalProperties: false,
-        required: ["bookId", "sourceId", "title", "author", "releaseDate", "language", "license", "smallQuotes", "mediumQuotes", "largeQuotes"]
+        required: ["title", "author", "releaseDate", "language", "license", "smallQuotes", "mediumQuotes", "largeQuotes"]
     }
 };
 
@@ -104,6 +102,7 @@ export const handler: Handler = async (): Promise<string> => {
 
         jsonResponse.releaseDate = new Date(Date.parse(jsonResponse.releaseDate)).toISOString();
         jsonResponse.bookId = Math.random().toString(36).slice(2); // generating a random stringified id
+        jsonResponse.sourceId = sourceId;
         jsonResponse.sourceUrl = `https://www.gutenberg.org/cache/epub/${sourceId}/pg${sourceId}.txt`;
 
         console.log("JSON response after parsing:", jsonResponse);

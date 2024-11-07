@@ -24,7 +24,7 @@
     "typescript-eslint": "^8.13.0"
   },
   "devDependencies": {
-    "@aws-amplify/backend": "^1.6.0",
+    "@aws-amplify/backend": "^1.6.2",
     "@aws-amplify/backend-cli": "^1.4.0",
     "@types/node": "^22.9.0",
     "@types/node-fetch": "^2.6.11",

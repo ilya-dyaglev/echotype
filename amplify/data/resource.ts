@@ -7,7 +7,7 @@ const schema = a
           .model({
             bookId: a.id().required(), // Unique identifier for each book
             sourceId: a.integer().required(),
-              sourceUrl: a.string().required(),
+            sourceUrl: a.string().required(),
             title: a.string().required(), // Title of the book
             author: a.string().required(), // Author of the book
             releaseDate: a.datetime().required(), // Release date in ISO 8601 format
