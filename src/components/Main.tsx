@@ -14,7 +14,7 @@ function Main({ textData, fetchedData }: MainProps) {
             <ProgressContainer currentNum={1} endNum={101} />
             <TypingArea textData={textData} />
             <div>
-                <pre>{JSON.stringify(fetchedData, null, 2)}</pre>
+                <pre>{`Current DB capacity: ${fetchedData.data?.length} books!`}</pre>
             </div>
         </div>
     );

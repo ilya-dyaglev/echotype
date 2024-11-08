@@ -7,3 +7,24 @@
     width: 90vw; 
     background: #121417;
 }
+
+.load-bar-container {
+    width: 100%;
+    /*background-color: #f3f3f3;*/
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.load-bar {
+    height: 10px;
+    background-color: #4caf50;
+    transition: width 1s linear;
+    border-radius: 4px 0 0 4px;
+}
+
+.load-bar-container p {
+    text-align: center;
+    font-size: 14px;
+    margin: 5px 0;
+}

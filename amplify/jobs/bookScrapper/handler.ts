@@ -101,7 +101,7 @@ export const handler: Handler = async (): Promise<string> => {
         const jsonResponse = JSON.parse(<string>response.choices[0].message.content);
 
         jsonResponse.releaseDate = new Date(Date.parse(jsonResponse.releaseDate)).toISOString();
-        jsonResponse.bookId = Math.random().toString(36).slice(2); // generating a random stringified id
+        jsonResponse.bookId = Math.random().toString(36).slice(2); // generating a random stringified id uidv7 - replace
         jsonResponse.sourceId = sourceId;
         jsonResponse.sourceUrl = `https://www.gutenberg.org/cache/epub/${sourceId}/pg${sourceId}.txt`;
 
