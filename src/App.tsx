@@ -2,46 +2,47 @@ import './App.css';
 import Header from './components/Header.tsx';
 import Main from './components/Main';
 import Footer from './components/Footer';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Schema } from '../amplify/data/resource.ts';
 import { generateClient } from 'aws-amplify/data';
 
 const client = generateClient<Schema>();
-const countDown = 30;
+const COUNTDOWN_DURATION = 15; // Countdown duration in seconds
 
 function App() {
     const [activeMode, setActiveMode] = useState('short');
     const [textData, setTextData] = useState('');
     const [fetchedData, setFetchedData] = useState<{ data?: any[] }>({});
-    const [counter, setCounter] = useState(countDown); // 30-second countdown
+    const [counter, setCounter] = useState(COUNTDOWN_DURATION);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const data = await client.models.BookMetadata.list();
+            const now = new Date(Date.now()).toISOString();
+            console.log(`Fetched at: ${now} \n`, data.data)
             setFetchedData(data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchData(); // Initial fetch
 
-        const intervalId = setInterval(() => {
+        const fetchInterval = setInterval(() => {
             fetchData();
-            setCounter(countDown); // Reset counter after each fetch
-        }, countDown*1000); // Fetch data every 60 seconds
+            setCounter(COUNTDOWN_DURATION); // Reset counter after each fetch
+        }, COUNTDOWN_DURATION * 1000);
 
-        const countdownId = setInterval(() => {
-            setCounter((prevCounter) => (prevCounter > 0 ? prevCounter - 1 : 0));
-        }, 1000); // Decrease counter every second
+        const countdownInterval = setInterval(() => {
+            setCounter((prev) => Math.max(prev - 1, 0));
+        }, 1000);
 
-        // Cleanup intervals on component unmount
         return () => {
-            clearInterval(intervalId);
-            clearInterval(countdownId);
+            clearInterval(fetchInterval);
+            clearInterval(countdownInterval);
         };
-    }, []);
+    }, [fetchData]);
 
     return (
         <div className="container">
@@ -50,7 +51,6 @@ function App() {
                 setTextData={setTextData}
                 setFetchedData={setFetchedData}
             />
-
 
             <Main
                 activeMode={activeMode}
@@ -61,11 +61,11 @@ function App() {
             <div className="load-bar-container">
                 <div
                     className="load-bar"
-                    style={{width: `${(countDown - counter) * (100 / 60)}%`}}
+                    style={{ width: `${(COUNTDOWN_DURATION - counter) * 100 / COUNTDOWN_DURATION}%` }}
                 />
                 <p>Next load in: {counter}s</p>
             </div>
-            <Footer/>
+            <Footer />
         </div>
     );
 }
