@@ -33,17 +33,17 @@ const jsonSchema = {
             smallQuotes: {
                 type: "array",
                 items: { type: "string" },
-                description: "quotes (200-250 characters per quote)",
+                description: "quotes (50-150 characters per quote)",
             },
             mediumQuotes: {
                 type: "array",
                 items: { type: "string" },
                 description: "quotes (300-500 characters per quote)",
             },
-            largeQuotes: {
+           largeQuotes: {
                 type: "array",
                 items: { type: "string" },
-                description: "quotes (>500 characters per quote)",
+                description: "quotes (700-1000 characters per quote)",
             },
         },
         additionalProperties: false,
