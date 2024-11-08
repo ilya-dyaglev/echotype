@@ -16,6 +16,8 @@ const schema = a
             smallQuotes: a.string().array().required(), // Short quotes (50-100 characters)
             mediumQuotes: a.string().array().required(), // Medium quotes (150-200 characters)
             largeQuotes: a.string().array().required(), // Long quotes (>200 characters)
+            createdAt: a.datetime().required(),
+            updatedAt: a.datetime().required(),
           })
           .identifier(["bookId"]), // Set bookId as the identifier
 

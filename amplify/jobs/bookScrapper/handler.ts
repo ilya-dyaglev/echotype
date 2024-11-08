@@ -99,11 +99,15 @@ export const handler: Handler = async (): Promise<string> => {
         });
 
         const jsonResponse = JSON.parse(<string>response.choices[0].message.content);
+        const createTimeStamp = new Date(Date.now()).toISOString();
 
         jsonResponse.releaseDate = new Date(Date.parse(jsonResponse.releaseDate)).toISOString();
         jsonResponse.bookId = Math.random().toString(36).slice(2); // generating a random stringified id uidv7 - replace
         jsonResponse.sourceId = sourceId;
         jsonResponse.sourceUrl = `https://www.gutenberg.org/cache/epub/${sourceId}/pg${sourceId}.txt`;
+        jsonResponse.createdAt = createTimeStamp;
+        jsonResponse.updatedAt = createTimeStamp;
+
 
         console.log("JSON response after parsing:", jsonResponse);
 
