@@ -8,6 +8,7 @@ import { generateClient } from 'aws-amplify/data';
 
 const client = generateClient<Schema>();
 const COUNTDOWN_DURATION = 15; // Countdown duration in seconds
+const TEST_LIMIT = 10000;
 
 function App() {
     const [activeMode, setActiveMode] = useState('short');
@@ -17,7 +18,7 @@ function App() {
 
     const fetchData = useCallback(async () => {
         try {
-            const data = await client.models.BookMetadata.list();
+            const data = await client.models.BookMetadata.list({limit: TEST_LIMIT});
             const now = new Date(Date.now()).toISOString();
             console.log(`Fetched at: ${now} \n`, data.data)
             setFetchedData(data);
@@ -27,8 +28,6 @@ function App() {
     }, []);
 
     useEffect(() => {
-        fetchData(); // Initial fetch
-
         const fetchInterval = setInterval(() => {
             fetchData();
             setCounter(COUNTDOWN_DURATION); // Reset counter after each fetch
