@@ -1,34 +1,20 @@
-import React, { ReactNode } from 'react';
+// Button.tsx
+import React from 'react';
 import '../styles/Button.css';
+import '../styles/ControlBar.css';
 
-type ButtonProps = {
-    children?: ReactNode;
-    onClick?: () => void;
-    type?: 'button' | 'submit' | 'reset';
-    className?: string;
-    label?: string;
+interface ButtonProps {
+    type: 'button' | 'submit' | 'reset';
+    label: string;
     isPrimary?: boolean;
-    disabled?: boolean;
-};
+    onClick: () => void;
+}
 
-const Button: React.FC<ButtonProps> = ({
-                                       children = [],
-                                       onClick = () => {},
-                                       type = 'button',
-                                       className = '',
-                                       label = '',
-                                       isPrimary = false,
-                                       disabled = false,
-                                       }) => {
+const Button: React.FC<ButtonProps> = ({ type, label, isPrimary, onClick }) => {
+    const className = isPrimary ? 'btn primary' : 'btn secondary';
     return (
-        <button
-            type={type}
-            className={`btn ${isPrimary ? 'primary' : 'secondary'} ${className}`}
-            onClick={onClick}
-            disabled={disabled}
-        >
-            {label && <span className="btn-label">{label}</span>}
-            {children}
+        <button type={type} className={className} onClick={onClick}>
+            <span className="btn-label">{label}</span>
         </button>
     );
 };

@@ -6,18 +6,16 @@
     padding: 0 0 1.5rem 0;
 }
 
-.progress-container .progress-label {
+.progress-label {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    color: #E5E8EB;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
 }
 
 .progress-label span {
-    font-feature-settings: 'dlig' on;
-    font-family: Manrope;
-    font-style: normal;
-    font-weight: 500;
     line-height: 1.5rem;
 }
 
@@ -26,11 +24,12 @@
     height: 0.4rem;
     background: #3B4A54;
     border-radius: 0.25rem;
-    align-self: stretch;
+    overflow: hidden;
 }
 
 .progress-bar div {
     background: #fff;
-    height: 0.4rem;
+    height: 100%;
     border-radius: 0.25rem;
+    transition: width 0.2s ease;
 }

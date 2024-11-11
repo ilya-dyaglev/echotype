@@ -9,11 +9,13 @@ type ProgressContainerProps = {
 };
 
 const ProgressContainer: React.FC<ProgressContainerProps> = ({ currentNum, endNum }) => {
-    const progress = Math.round((currentNum / endNum) * 100);
+    const safeCurrentNum = Math.max(0, Math.min(currentNum, endNum));
+    const progress = Math.round((safeCurrentNum / endNum) * 100);
+
     return (
         <div className="progress-container">
-            <ProgressLabel currentNum={currentNum} endNum={endNum} progress={progress} />
-            <ProgressBar progress={Math.round(progress)} />
+            <ProgressLabel currentNum={safeCurrentNum} endNum={endNum} progress={progress} />
+            <ProgressBar progress={progress} />
         </div>
     );
 };

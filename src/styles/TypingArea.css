@@ -1,26 +1,112 @@
 .typing-area {
     display: flex;
-    width: 100%; 
-    height: 25rem;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    align-content: center;
-    gap: 0.9375rem 0rem;
-    flex-wrap: wrap;
+    width: 100%;
+    height: 25rem;
+    gap: 1rem;
     border-radius: 0.75rem;
     border: 1px solid #3B4A54;
-    background: #1C2126;
+    background-color: #1C2126;
+    padding: 1rem;
+    outline: none;
+    cursor: text;
+    overflow: auto; /* Enable scrolling if content overflows */
 }
 
-.text-data {
-    padding: 0.94rem;
+/* Focused State */
+.typing-area.focused {
+    box-shadow: 0 0 7px #E5E8EB; /* Green glow when focused */
+}
+
+/* Progress Bar Container */
+.progress-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Progress Label */
+.progress-label {
+    display: flex;
+    justify-content: space-between;
     color: #E5E8EB;
-    font-feature-settings: 'dlig' on;
-    font-family: Manrope;
-    font-size: 2rem;
-    font-style: normal;
+    font-family: 'Manrope', sans-serif;
     font-weight: 500;
-    line-height: 2.58rem;
 }
 
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 0.4rem;
+    background: #3B4A54;
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
 
+.progress-bar div {
+    background: #fff;
+    height: 100%;
+    border-radius: 0.25rem;
+    transition: width 0.2s ease;
+}
+
+/* Quote Display */
+.quote-display {
+    text-align: center;
+    width: 100%;
+    max-height: 100%;
+    padding: 1rem;
+    color: #E5E8EB;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    overflow: auto;
+}
+
+/* Character Styling */
+.quote-display span {
+    display: inline-block;
+}
+
+/* Correct Characters */
+.quote-display span.correct {
+    color: #4CAF50;
+}
+
+/* Incorrect Characters */
+.quote-display span.incorrect {
+    color: #F44336;
+}
+
+/* Current Character */
+.quote-display span.current {
+    text-decoration: underline;
+    text-decoration-color: #E5E8EB;
+}
+
+/* Pending Characters */
+.quote-display span.pending {
+    color: rgba(229, 232, 235, 0.3);
+}
+
+/* Stats Display */
+.stats {
+    margin-top: 1rem;
+    color: #E5E8EB;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    text-align: center;
+    display: flex;
+    gap: 1rem;
+}
+
+.stats p {
+    margin: 0.25rem 0;
+}

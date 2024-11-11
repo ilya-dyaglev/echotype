@@ -33,12 +33,12 @@ const jsonSchema = {
             smallQuotes: {
                 type: "array",
                 items: { type: "string" },
-                description: "quotes (50-150 characters per quote)",
+                description: "quotes (50-100 characters per quote)",
             },
             mediumQuotes: {
                 type: "array",
                 items: { type: "string" },
-                description: "quotes (300-500 characters per quote)",
+                description: "quotes (300-400 characters per quote)",
             },
            largeQuotes: {
                 type: "array",
@@ -110,6 +110,8 @@ export const handler: Handler = async (): Promise<string> => {
 
 
         console.log("JSON response after parsing:", jsonResponse);
+
+        console.log(`requested resource: ${TABLE_NAME}`)
 
         // Store the book data in DynamoDB
         const params = {

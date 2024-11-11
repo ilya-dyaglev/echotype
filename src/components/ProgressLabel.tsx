@@ -1,20 +1,17 @@
 import React from 'react';
+import "../styles/ProgressContainer.css";
 
 type ProgressLabelProps = {
-    currentNum: string | number;
-    endNum: string | number;
-    progress: string | number;
+    currentNum: number;
+    endNum: number;
+    progress: number;
 };
 
 const ProgressLabel: React.FC<ProgressLabelProps> = ({ currentNum, endNum, progress }) => {
     return (
         <div className="progress-label">
-            <div>
-                <span>{currentNum}</span>
-                <span>/</span>
-                <span>{endNum}</span>
-            </div>
-            <span>{progress}%</span>
+            <span>{`Progress: ${progress}%`}</span>
+            <span>{`${currentNum} / ${endNum}`}</span>
         </div>
     );
 };

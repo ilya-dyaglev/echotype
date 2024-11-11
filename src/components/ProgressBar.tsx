@@ -1,7 +1,8 @@
 import React from 'react';
+import "../styles/ProgressContainer.css";
 
 type ProgressBarProps = {
-    progress: string | number;
+    progress: number;
 };
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
