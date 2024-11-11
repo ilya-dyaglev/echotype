@@ -1,3 +1,7 @@
+button:focus{
+    outline:none;
+}
+
 .btn {
     width: 5.75rem;
     height: 1.5rem;
@@ -10,6 +14,15 @@
     background-color: #293032;
     transition: background-color 0.3s ease;
     outline: none;
+}
+
+.next-book {
+    background-color:#4caf50;
+}
+
+.next-book:hover {
+    color: #FFF;
+    opacity: 0.8;
 }
 
 .btn-label {

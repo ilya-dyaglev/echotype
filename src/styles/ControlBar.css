@@ -1,4 +1,11 @@
 .control-bar {
+    width: 30rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.control-bar div {
     display: flex;
     width: 19.2rem;
     justify-content: space-between;

@@ -5,7 +5,19 @@ import ProgressContainer from './ProgressContainer'; // Import the ProgressConta
 // Define the props expected by the TypingArea component
 type TypingAreaProps = {
     textData: string; // The text (quote) that the user will type
+    onFinish: (stats: TypingStats) => void; // Callback when typing is finished
+    onFetchNewBook: () => void;
 };
+
+// Define the structure for typing stats
+interface TypingStats {
+    wpm: number;
+    accuracy: number;
+    errors: number;
+    timeTaken: number; // in seconds
+    charsTyped: number;
+    statsOverTime: Array<{ time: number; wpm: number; accuracy: number }>;
+}
 
 // Interface defining the structure of a typed character
 interface TypedChar {
@@ -14,27 +26,20 @@ interface TypedChar {
 }
 
 // TypingArea component definition
-const TypingArea: React.FC<TypingAreaProps> = ({ textData }) => {
-    // State to keep track of the characters typed by the user
+const TypingArea: React.FC<TypingAreaProps> = ({ textData, onFinish, onFetchNewBook }) => {
+    // State variables
     const [typedChars, setTypedChars] = useState<TypedChar[]>([]);
-
-    // State to keep track of the current character index in the quote
     const [currentCharIndex, setCurrentCharIndex] = useState(0);
-
-    // State to keep track of the number of errors made by the user
     const [errors, setErrors] = useState(0);
-
-    // State to keep track of the start time of typing
     const [startTime, setStartTime] = useState<Date | null>(null);
-
-    // State to keep track of the Words Per Minute (WPM)
     const [wpm, setWpm] = useState<number>(0);
-
-    // State to determine if typing is finished
     const [isFinished, setIsFinished] = useState(false);
-
-    // State to track whether the TypingArea is focused
     const [isFocused, setIsFocused] = useState(false);
+
+    // State to keep track of typing stats over time
+    const [statsOverTime, setStatsOverTime] = useState<
+        Array<{ time: number; wpm: number; accuracy: number }>
+    >([]);
 
     // Use Array.from to correctly handle Unicode characters in the textData
     const quoteCharacters = React.useMemo(() => Array.from(textData), [textData]);
@@ -42,10 +47,7 @@ const TypingArea: React.FC<TypingAreaProps> = ({ textData }) => {
     // Reference to the typing area DOM element
     const textAreaRef = useRef<HTMLDivElement>(null);
 
-    /**
-     * Effect to initialize or reset the component state when textData changes
-     * Resets typedChars, currentCharIndex, errors, startTime, wpm, and isFinished
-     */
+    // Effect to initialize or reset the component state when textData changes
     useEffect(() => {
         setTypedChars(
             quoteCharacters.map((char) => ({
@@ -58,78 +60,77 @@ const TypingArea: React.FC<TypingAreaProps> = ({ textData }) => {
         setStartTime(null);
         setWpm(0);
         setIsFinished(false);
+        setStatsOverTime([]);
     }, [quoteCharacters]);
 
-    /**
-     * Effect to start the timer when the user types the first character
-     * Sets the startTime when currentCharIndex reaches 1
-     */
+    // Effect to start the timer when the user types the first character
     useEffect(() => {
         if (currentCharIndex === 1 && !startTime) {
             setStartTime(new Date());
         }
     }, [currentCharIndex, startTime]);
 
-    /**
-     * Effect to update WPM in real-time as the user types
-     * Calls calculateWPM whenever currentCharIndex changes
-     */
+    // Effect to update WPM and accuracy in real-time as the user types
+    // Also records stats over time
     useEffect(() => {
         if (startTime && !isFinished && currentCharIndex > 0) {
             calculateWPM();
+            recordStats();
         }
     }, [currentCharIndex]);
 
-    /**
-     * Effect to check if typing is finished
-     * Sets isFinished to true and calculates final WPM when typing is complete
-     */
+    // Effect to check if typing is finished
+    // Sets isFinished to true and calculates final WPM when typing is complete
     useEffect(() => {
         if (currentCharIndex >= quoteCharacters.length && !isFinished) {
             setIsFinished(true);
             calculateWPM();
+
+            // Pass the stats to the parent component
+            const timeTaken = (new Date().getTime() - startTime!.getTime()) / 1000; // in seconds
+            onFinish({
+                wpm,
+                accuracy,
+                errors,
+                timeTaken,
+                charsTyped: currentCharIndex,
+                statsOverTime,
+            });
         }
     }, [currentCharIndex, quoteCharacters.length, isFinished]);
 
-    /**
-     * Effect to auto-focus the typing area when the component mounts
-     */
+    // Effect to auto-focus the typing area when the component mounts
     useEffect(() => {
         if (textAreaRef.current) {
             textAreaRef.current.focus();
         }
     }, []);
 
-    /**
-     * Handler function when the TypingArea gains focus
-     * Updates the isFocused state to true
-     */
+    // Handler function when the TypingArea gains focus
     const handleFocus = () => {
         setIsFocused(true);
     };
 
-    /**
-     * Handler function when the TypingArea loses focus
-     * Updates the isFocused state to false
-     */
+    // Handler function when the TypingArea loses focus
     const handleBlur = () => {
         setIsFocused(false);
     };
 
-    /**
-     * Handler function for keydown events in the typing area
-     * Processes user input and updates the state accordingly
-     * @param e - The keyboard event
-     */
+    // Handler function for keydown events in the typing area
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         // Only handle key events if typing area is focused
         if (!isFocused) return;
 
-        // Avoid blocking standard shortcuts (e.g., Cmd+R, Ctrl+R)
+        // Do not block standard shortcuts (e.g., Cmd+R, Ctrl+R)
         if (e.metaKey || e.ctrlKey || e.altKey) return;
 
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            onFetchNewBook();
+        }
+
         // List of keys to ignore
-        const ignoreKeys = ['Meta', 'Alt', 'Control', 'Shift', 'CapsLock', 'Tab'];
+        const ignoreKeys = ['Meta', 'Alt', 'Control', 'Shift', 'CapsLock'];
 
         // Ignore non-character keys
         if (ignoreKeys.includes(e.key)) return;
@@ -189,10 +190,7 @@ const TypingArea: React.FC<TypingAreaProps> = ({ textData }) => {
         }
     };
 
-    /**
-     * Function to calculate Words Per Minute (WPM)
-     * Uses the standard net WPM formula and updates the wpm state
-     */
+    // Function to calculate Words Per Minute (WPM)
     const calculateWPM = () => {
         if (startTime) {
             const now = new Date();
@@ -212,21 +210,23 @@ const TypingArea: React.FC<TypingAreaProps> = ({ textData }) => {
         }
     };
 
-    /**
-     * Calculate typing accuracy as a percentage
-     */
+    // Calculate typing accuracy as a percentage
     const accuracy =
         currentCharIndex > 0 ? Math.round(((currentCharIndex - errors) / currentCharIndex) * 100) : 100;
 
-    /**
-     * Calculate progress percentage
-     */
-    // const progress = Math.round((currentCharIndex / quoteCharacters.length) * 100);
+    // Function to record stats over time
+    const recordStats = () => {
+        if (startTime) {
+            const now = new Date();
+            const timeElapsed = (now.getTime() - startTime.getTime()) / 1000; // in seconds
+            setStatsOverTime((prevStats) => [
+                ...prevStats,
+                { time: timeElapsed, wpm, accuracy },
+            ]);
+        }
+    };
 
-    /**
-     * Function to render the quote with appropriate styling
-     * Applies classes based on the status of each character
-     */
+    // Function to render the quote with appropriate styling
     const renderQuote = () => {
         return typedChars.map((typedChar, index) => {
             let className = typedChar.status;
@@ -247,10 +247,7 @@ const TypingArea: React.FC<TypingAreaProps> = ({ textData }) => {
         });
     };
 
-    /**
-     * Handler function for clicks on the typing area
-     * Ensures the typing area is focused when clicked
-     */
+    // Handler function for clicks on the typing area
     const handleClick = () => {
         if (textAreaRef.current) {
             textAreaRef.current.focus();

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../styles/Main.css';
 import TypingArea from './TypingArea';
+import Results from './Results';
+
 
 interface BookData {
     bookId: string;
@@ -18,18 +20,43 @@ interface BookData {
     updatedAt: string;
 }
 
+interface TypingStats {
+    wpm: number;
+    accuracy: number;
+    errors: number;
+    timeTaken: number; // in seconds
+    charsTyped: number;
+    statsOverTime: Array<{ time: number; wpm: number; accuracy: number }>;
+}
+
 interface MainProps {
     activeMode: 'short' | 'medium' | 'long';
     currentQuote: string;
     currentBook: BookData;
+    onFetchNewBook: () => void;
 }
 
-const Main: React.FC<MainProps> = ({ currentQuote, currentBook }) => {
-    /**
-     * Function to format ISO date strings into a readable format
-     * @param isoString - The ISO date string to format
-     * @returns A formatted date string
-     */
+const Main: React.FC<MainProps> = ({ currentQuote, currentBook, onFetchNewBook }) => {
+    // State to track whether typing is finished
+    const [typingFinished, setTypingFinished] = useState(false);
+
+    // State to store typing statistics
+    const [typingStats, setTypingStats] = useState<TypingStats | null>(null);
+
+    // Handler function when typing is finished
+    const handleTypingFinish = (stats: TypingStats) => {
+        setTypingStats(stats);
+        setTypingFinished(true);
+    };
+
+    // Handler function to retake the test
+    const handleRetake = () => {
+        // Reset typing state
+        setTypingFinished(false);
+        setTypingStats(null);
+    };
+
+    // Function to format ISO date strings into a readable format
     const formatDate = (isoString: string): string => {
         const date = new Date(isoString);
         return date.toLocaleDateString('en-US', {
@@ -41,13 +68,19 @@ const Main: React.FC<MainProps> = ({ currentQuote, currentBook }) => {
 
     return (
         <div className="main">
-            <TypingArea textData={currentQuote} />
-            {/* Display book's metadata - to enhance in the future */}
-            <div>
-                <pre>{`Title: ${currentBook.title}`} (<a href={`https://www.gutenberg.org/cache/epub/${currentBook.sourceId}/pg${currentBook.sourceId}-images.html`}><span>read full version</span></a>)</pre>
-                <pre>{`Author: ${currentBook.author}`}</pre>
-                <pre>{`Released on: ${formatDate(currentBook.releaseDate)}`}</pre>
-            </div>
+            {typingFinished && typingStats ? (
+                <Results typingStats={typingStats} onRetake={handleRetake} />
+            ) : (
+                <>
+                    <TypingArea textData={currentQuote} onFinish={handleTypingFinish} onFetchNewBook={onFetchNewBook} />
+                    {/* Display additional information about the book */}
+                    <div>
+                        <pre>{`Title: ${currentBook.title}`}</pre>
+                        <pre>{`Author: ${currentBook.author}`}</pre>
+                        <pre>{`Released on: ${formatDate(currentBook.releaseDate)}`}</pre>
+                    </div>
+                </>
+            )}
         </div>
     );
 };

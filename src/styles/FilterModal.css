@@ -1,0 +1,171 @@
+/* FilterModal.css */
+.filter-button{
+    width: 24rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #4CAF50;
+}
+
+.filter-button .btn-label {
+    font-size: 1rem;
+}
+
+.filter-button:hover:enabled, .filter-modal-content button:hover {
+    opacity: 0.8;
+    color: #fff;
+}
+
+.filter-button:focus {
+    outline: none;
+}
+
+.filter-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.filter-modal-content {
+    background: #1C2126;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    color: #E5E8EB;
+    width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.filter-modal-content h2 {
+    margin-top: 0;
+}
+
+.filter-input {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.filter-input label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.filter-input input {
+    width: 100%;
+    padding: 0.5rem;
+    background: #3B4A54;
+    border: none;
+    color: #E5E8EB;
+    border-radius: 0.25rem;
+}
+
+.suggestions {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    width: 100%;
+    background: #1C2126;
+    border: 1px solid #3B4A54;
+    border-radius: 0.25rem;
+    max-height: 10rem;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.suggestions li {
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.suggestions li:hover {
+    background: #3B4A54;
+}
+
+.language-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.language-options label {
+    display: flex;
+    align-items: center;
+}
+
+.language-options input {
+    margin-right: 0.5rem;
+}
+
+.book-list {
+    margin-bottom: 1.5rem;
+}
+
+.book-list h3 {
+    margin-bottom: 0.5rem;
+}
+
+.book-list-container {
+    max-height: 15rem;
+    overflow-y: auto;
+    border: 1px solid #3B4A54;
+    padding: 0.5rem;
+    background: #2A2F34;
+    border-radius: 0.25rem;
+}
+
+.book-item {
+    padding: 0.5rem;
+    border-bottom: 1px solid #3B4A54;
+}
+
+.book-item:last-child {
+    border-bottom: none;
+}
+
+.book-item p {
+    margin: 0;
+}
+
+.load-more-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.filter-buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.filter-buttons button {
+    margin-left: 1rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.filter-buttons button:first-of-type {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.filter-buttons button:last-of-type {
+    background-color: #F44336;
+    color: #fff;
+}
+
+.filter-modal-content button:focus {
+    outline: none;
+}
+

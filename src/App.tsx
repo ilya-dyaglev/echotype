@@ -1,8 +1,8 @@
-// Import necessary modules and components
 import './App.css';
 import Header from './components/Header';
 import Main from './components/Main';
 import Footer from './components/Footer';
+import FilterModal from './components/FilterModal';
 import { useEffect, useState } from 'react';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../amplify/data/resource';
@@ -11,10 +11,10 @@ import type { Schema } from '../amplify/data/resource';
 const client = generateClient<Schema>();
 
 // Constants for data fetching
-const TEST_LIMIT = 100; // I'll probably fix this issue in the future, currently it's not really efficient.
+const TEST_LIMIT = 10000; // I'll probably fix this issue in the future, currently it's not really efficient.
 
 // Interface for fetched data
-interface BookData {
+export interface BookData {
     bookId: string;
     sourceId: number;
     sourceUrl: string;
@@ -49,6 +49,12 @@ function App() {
 
     // State to handle errors
     const [error, setError] = useState<string | null>(null);
+
+    // State to control the visibility of the filter modal
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+    // State to store filtered books
+    const [filteredBooksData, setFilteredBooksData] = useState<BookData[] | null>(null);
 
     /**
      * Fetches data from the backend API on component mount
@@ -90,8 +96,11 @@ function App() {
      * @param forceNewBook - If true, selects a new book regardless of current book
      */
     const selectRandomQuote = (forceNewBook = false) => {
-        if (booksData.length === 0) {
+        const dataToUse = filteredBooksData && filteredBooksData.length > 0 ? filteredBooksData : booksData;
+
+        if (dataToUse.length === 0) {
             setCurrentQuote(null);
+            setCurrentBook(null);
             return;
         }
 
@@ -109,7 +118,7 @@ function App() {
         // If forceNewBook is true or there's no current book, select a new one
         if (!book || forceNewBook) {
             // Filter books that have quotes of the desired type
-            const booksWithQuotes = booksData.filter((b) => b[quoteType] && b[quoteType].length > 0);
+            const booksWithQuotes = dataToUse.filter((b) => b[quoteType] && b[quoteType].length > 0);
             if (booksWithQuotes.length === 0) {
                 // No books have quotes of the selected type
                 setCurrentQuote(null);
@@ -128,7 +137,7 @@ function App() {
 
         // If the current book doesn't have quotes of the selected type, find another book
         if (!quotes || quotes.length === 0) {
-            const booksWithQuotes = booksData.filter((b) => b[quoteType] && b[quoteType].length > 0);
+            const booksWithQuotes = dataToUse.filter((b) => b[quoteType] && b[quoteType].length > 0);
             if (booksWithQuotes.length === 0) {
                 // No books have quotes of the selected type
                 setCurrentQuote(null);
@@ -162,6 +171,15 @@ function App() {
     }, [loading, activeMode]);
 
     /**
+     * Effect to select a random quote when filteredBooksData changes
+     */
+    useEffect(() => {
+        if (filteredBooksData !== null) {
+            selectRandomQuote(true);
+        }
+    }, [filteredBooksData]);
+
+    /**
      * Handler for changing the active typing mode
      * @param mode - The new active mode ('short', 'medium', or 'long')
      */
@@ -173,8 +191,21 @@ function App() {
      * Handler for selecting a new quote
      * Selects another quote from a new book
      */
-    const handleSelectNewQuote = () => {
+    const handleFetchNewBook = () => {
         selectRandomQuote(true); // Force selection of a new book
+    };
+
+    const handleOpenFilterModal = () => {
+        setIsFilterModalOpen(true);
+    };
+
+    const handleCloseFilterModal = () => {
+        setIsFilterModalOpen(false);
+    };
+
+    const handleApplyFilters = (filteredBooks: BookData[]) => {
+        setFilteredBooksData(filteredBooks);
+        setIsFilterModalOpen(false);
     };
 
     // Handle loading state
@@ -186,7 +217,7 @@ function App() {
     return (
         <div className="container">
             {/* Header component with mode selection */}
-            <Header setActiveMode={handleModeChange} />
+            <Header setActiveMode={handleModeChange} onFetchNewBook={handleFetchNewBook} />
 
             {/* Main component with the current quote and book info */}
             {currentQuote && currentBook ? (
@@ -194,15 +225,24 @@ function App() {
                     activeMode={activeMode}
                     currentQuote={currentQuote}
                     currentBook={currentBook}
+                    onFetchNewBook={handleFetchNewBook}
                 />
             ) : (
                 <div>No quotes available for the selected mode.</div>
             )}
 
-            {/* Button to select another quote */}
-            <button className="btn primary" onClick={handleSelectNewQuote}>
-                <span className={'btn-label'}>next book</span>
+            {/* Button to open filter modal */}
+            <button className="filter-button" onClick={handleOpenFilterModal}>
+                <span className="btn-label">Browse Books</span>
             </button>
+
+            {isFilterModalOpen && (
+                <FilterModal
+                    booksData={booksData}
+                    onApplyFilters={handleApplyFilters}
+                    onClose={handleCloseFilterModal}
+                />
+            )}
 
             {/* Footer component */}
             <Footer />
