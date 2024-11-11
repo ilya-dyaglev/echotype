@@ -34,7 +34,10 @@ An open-source typing practice application that uses literary quotes to help use
 
 ## **Demo**
 
-[Live Demo](#) (Add link to live demo if available)
+[Live Demo](#) 
+
+[echotype.io](https://echotype.io) - deployed application
+
 
 ---
 
@@ -49,7 +52,7 @@ An open-source typing practice application that uses literary quotes to help use
 ### **Clone the Repository**
 
 ```bash
-git clone https://github.com/yourusername/echotype.git
+git clone https://github.com/ilya-dyaglev/echotype.git
 cd echotype
 ```
 
@@ -281,13 +284,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## **Acknowledgements**
 
-- **[Project Gutenberg](https://www.gutenberg.org/)**: The quotes and literary texts used in this application are sourced from Project Gutenberg. Project Gutenberg is a library of over 60,000 free eBooks, offering a vast collection of literary works in the public domain.
-
----
-
-**Disclaimer**: This application uses content from Project Gutenberg. All the books and quotes are in the public domain. Please ensure compliance with any relevant laws and regulations when using this content.
-
----
+- **[Project Gutenberg](https://www.gutenberg.org/)**: The quotes and literary texts used in this application are sourced from Project Gutenberg. Project Gutenberg is a library of over 70,000 free eBooks, offering a vast collection of literary works in the public domain.
 
 ## **Contact**
 
