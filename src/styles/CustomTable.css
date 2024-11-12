@@ -1,0 +1,41 @@
+.custom-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.custom-table th,
+.custom-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.custom-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #1a1a1a;
+}
+
+.custom-table tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+    color: #1a1a1a;
+}
+
+.custom-table .selected-row {
+    background-color: #4caf50;
+    color: #f1f1f1;
+}
+
+.custom-table .selected-row:hover {
+    background-color: #b3d9ff;
+}

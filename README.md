@@ -20,26 +20,43 @@ An open-source typing practice application that uses literary quotes to help use
 
 ## **Features**
 
-- **Random Quote Selection**: Fetches random quotes from a collection of books to provide a unique typing experience each time.
-- **Multiple Difficulty Levels**: Users can choose between short, medium, and long quotes to match their typing proficiency.
+- **Random Quote Selection**: Fetches random quotes from a curated collection of books to provide a unique typing experience each time.
+- **Multiple Typing Modes**:
+    - **Short**: Practice with short quotes for quick sessions.
+    - **Medium**: Medium-length quotes for moderate difficulty.
+    - **Long**: Longer quotes for advanced practice.
 - **Real-Time Feedback**:
     - Displays correct and incorrect keystrokes.
     - Highlights the current character to be typed.
     - Updates typing statistics such as Errors, Words Per Minute (WPM), and Accuracy.
 - **Results Screen**:
     - Upon completion, displays a detailed results screen with typing statistics.
-    - Provides graphs showing typing speed and accuracy over time.
+    - Provides interactive graphs showing typing speed and accuracy over time.
 - **Keyboard Shortcuts**:
-    - **Fetch New Quote**: Quickly fetch a new quote using a keyboard shortcut.
-- **Book Filtering**:
-    - Filter and browse available books based on title, author, or language.
-    - Select specific books to customize your typing practice.
-- **Progress Tracking**: Visual progress bar that shows your typing progress through the quote.
-- **Book Information**: Displays the title, author, and release date of the book from which the quote is taken.
-- **Loading Animation**: An animated loading screen provides visual feedback during data fetching.
-- **Responsive Design**: Optimized for both desktop and mobile devices.
+    - **Fetch New Quote**: Quickly fetch a new quote using a keyboard shortcut (e.g., `Tab` key).
+- **Book Filtering and Selection**:
+    - **Filter Books**:
+        - Filter available books based on **Title**, **Author**, or **Language**.
+        - Multi-select support for filtering by multiple titles, authors, or languages.
+    - **Browse and Select Books**:
+        - View a list of available books after applying filters.
+        - Select a specific book to practice typing quotes exclusively from that book.
+    - **Reset Filters**: Easily reset all filters to default settings.
+- **Progress Tracking**:
+    - Visual progress bar showing your typing progress through the quote.
+    - Typing statistics updated in real-time.
+- **Book Information**:
+    - Displays detailed information about the book, including title, author, language, and release date.
+- **Loading Animation**:
+    - An animated loading screen provides visual feedback during data fetching.
+- **Responsive Design**:
+    - Optimized for both desktop and mobile devices.
 - **Performance Optimization**:
-    - Utilizes `useMemo` and other React hooks for efficient rendering.
+    - Utilizes React's `useMemo` and `useCallback` hooks for efficient rendering.
+    - Memoization of computations and functions to enhance performance.
+- **Accessibility**:
+    - Focus management and keyboard event handling improve accessibility.
+    - Visual indicators and ARIA attributes enhance user experience for all users.
 
 ---
 
@@ -112,39 +129,51 @@ The application will run on `http://localhost:3000` by default.
 
 - **Header**:
     - Contains the logo, typing mode selection, and a call-to-action.
-    - Includes a button to open the filter modal or fetch a new quote.
+    - Includes buttons to open the filter modal or fetch a new quote.
 - **Control Bar**:
     - Use the buttons to select the typing mode:
-        - **Short**: Short quotes for quick practice.
-        - **Medium**: Medium-length quotes for moderate difficulty.
-        - **Long**: Longer quotes for advanced practice.
+        - **Short**
+        - **Medium**
+        - **Long**
 - **Typing Area**:
     - Click on the typing area to focus and begin typing.
     - The quote is displayed with real-time feedback on your keystrokes.
     - Statistics are updated as you type.
 - **Results Screen**:
-    - Upon completion of typing, the results screen displays your typing statistics.
-    - Provides graphs showing typing speed and accuracy over time.
+    - Displays your typing statistics upon completion.
+    - Provides interactive graphs showing typing speed and accuracy over time.
     - Options to retake the test or sign in to track progress.
 - **Filter Modal**:
     - Accessed via the "Browse Books" button.
-    - Filter available books by title, author, or language.
-    - View and select specific books to practice with.
+    - **Features**:
+        - **Title, Author, and Language Filters**:
+            - Multi-select filters to narrow down books.
+        - **Available Books Section**:
+            - Displays books matching the applied filters.
+            - Select a specific book to practice with quotes exclusively from that book.
+        - **Reset Filters**:
+            - Quickly reset all filters to default settings.
+    - **How to Use**:
+        1. Click "Browse Books" to open the filter modal.
+        2. Select titles, authors, or languages to filter the books.
+        3. View the available books in the list.
+        4. Optionally select a specific book from the list.
+        5. Click "Apply Filters" to update the quotes based on your selection.
 - **Progress Bar**:
     - Shows your progress through the quote.
 - **Book Information**:
-    - Displays details about the book from which the quote is taken.
+    - Displays details about the current book, including title, author, language, and release date.
 - **Other Quote Button**:
-    - Click to fetch a new quote from a different book.
+    - Click to fetch a new quote, optionally from a different book if no specific book is selected.
 
 ### **Keyboard Shortcuts**
 
+- **Fetch New Quote**:
+    - Press the `Tab` key to fetch a new quote.
 - **Backspace**:
     - Correct mistakes by deleting the previous character.
-- **Fetch New Quote**:
-    - Press a keyboard shortcut (e.g., `Tab`) to fetch a new quote.
 - **Standard Shortcuts**:
-    - Browser shortcuts like `Ctrl+R` or `Cmd+R` are not blocked (`Tab` is an exception).
+    - Browser shortcuts like `Ctrl+R` or `Cmd+R` are not blocked.
 
 ### **Graph Interactions**
 
@@ -169,8 +198,9 @@ echotype/
 │   │   ├── CTA.tsx
 │   │   ├── Main.tsx
 │   │   ├── TypingArea.tsx
-│   │   ├── Results.tsx       
-│   │   ├── FilterModal.tsx  
+│   │   ├── Results.tsx
+│   │   ├── FilterModal.tsx
+│   │   ├── CustomTable.tsx
 │   │   ├── ProgressContainer.tsx
 │   │   └── Footer.tsx
 │   ├── styles/
@@ -178,8 +208,9 @@ echotype/
 │   │   ├── Header.css
 │   │   ├── ControlBar.css
 │   │   ├── TypingArea.css
-│   │   ├── Results.css     
-│   │   ├── FilterModal.css  
+│   │   ├── Results.css
+│   │   ├── FilterModal.css
+│   │   ├── CustomTable.css
 │   │   └── Main.css
 │   ├── App.tsx
 │   ├── index.tsx
@@ -199,7 +230,18 @@ echotype/
 
 ### **Overview**
 
-EchoType is built using React and TypeScript, following a component-based architecture. The application leverages AWS Amplify for data fetching, retrieving quotes from a backend service. The architecture emphasizes modularity, reusability, and separation of concerns, making it scalable and maintainable. Recent enhancements include a results screen with detailed statistics and graphs, a filter modal for selecting books, and performance optimizations.
+EchoType is built using React and TypeScript, following a component-based architecture. The application leverages AWS Amplify for data fetching, retrieving quotes from a backend service. The architecture emphasizes modularity, reusability, and separation of concerns, making it scalable and maintainable. Recent enhancements include:
+
+- **Filter Modal with Advanced Filtering**:
+    - Multi-select support for titles, authors, and languages.
+    - Optimized with `useMemo` and `useCallback` for performance.
+    - Abstracted filtering logic to enable easy addition of new filters in the future.
+- **Performance Optimizations**:
+    - Memoization of computations and functions to prevent unnecessary re-renders.
+    - Ensured referential stability of functions and data using React hooks.
+- **Bug Fixes and Improvements**:
+    - Addressed issues with quote selection logic to ensure quotes are selected only from filtered books or a specifically selected book.
+    - Implemented state management enhancements to maintain consistent behavior.
 
 ### **Component Hierarchy**
 
@@ -214,106 +256,86 @@ EchoType is built using React and TypeScript, following a component-based archit
         - **Results** (conditionally rendered)
             - **Graphs** (using Recharts)
     - **FilterModal** (conditionally rendered)
+        - **CustomTable**
     - **Footer**
 
 ### **Data Flow and State Management**
 
-- **App.tsx**: Acts as the root component and central point for state management.
+- **App.tsx**: Central point for state management.
     - **State Variables**:
-        - `activeMode`: The current typing mode (`short`, `medium`, `long`).
-        - `booksData`: The array of books fetched from the backend.
-        - `filteredBooksData`: The array of books after applying filters.
-        - `currentBook`: The currently selected book.
+        - `activeMode`: Current typing mode (`short`, `medium`, `long`).
+        - `booksData`: Array of books fetched from the backend.
+        - `filteredBooksData`: Books after applying filters.
+        - `currentBook`: Currently selected book (can be `null` if no specific book is selected).
         - `currentQuote`: The quote currently displayed for typing.
-        - `loading` and `error`: For handling data fetching states.
+        - `loading`, `error`: For handling data fetching states.
         - `isFilterModalOpen`: Controls the visibility of the filter modal.
+        - `progress`: Tracks loading progress.
     - **Data Fetching**:
-        - Fetches book data from the backend using AWS Amplify when the component mounts.
+        - Fetches book data from the backend using AWS Amplify on component mount.
         - Cleans the data by filtering out `null` or `undefined` quotes.
     - **Quote Selection Logic**:
-        - Selects a random book and quote based on the `activeMode` and applied filters.
-        - Ensures that the quote type corresponds to the selected mode.
-        - Provides functions to change the typing mode and select a new quote.
-    - **Filter Handling**:
-        - Opens the `FilterModal` to allow users to select books based on title, author, or language.
-        - Updates `filteredBooksData` based on the selected filters.
-        - Uses `useEffect` to select a new quote when filters are applied.
-- **Header**:
-    - **ControlBar**:
-        - Allows users to change the `activeMode`.
-        - Passes the selected mode back to `App.tsx` through callbacks.
-        - Includes a button to fetch a new quote or open the filter modal.
-    - **CTA**:
-        - Displays a call-to-action message (e.g., "track your progress").
-- **Main**:
-    - Receives `currentQuote`, `currentBook`, and other props from `App.tsx`.
-    - Conditionally renders the **TypingArea** or **Results** component based on typing completion.
-- **TypingArea**:
-    - Manages its own state for typing logic.
-        - **State Variables**:
-            - `typedChars`: Array of characters with their typing status.
-            - `currentCharIndex`: Index of the current character to be typed.
-            - `errors`, `wpm`, `accuracy`: Typing statistics.
-            - `isFocused`: Whether the typing area is focused.
-            - `isFinished`: Whether the user has finished typing the quote.
-            - `statsOverTime`: Array to track typing speed and accuracy over time.
-        - **Event Handling**:
-            - Handles keyboard events for typing.
-            - Updates typing statistics and progress.
-            - Manages focus state to enable or disable typing input.
-            - Implements keyboard shortcuts (e.g., to fetch a new quote).
-        - **ProgressContainer**:
-            - Displays the progress bar.
-            - Updated based on `currentCharIndex` and the length of the quote.
-    - **Results**:
-        - Receives typing statistics from `TypingArea`.
-        - Displays detailed statistics such as WPM, accuracy, errors, and time taken.
-        - Renders graphs showing typing speed and accuracy over time using **Recharts**.
-        - Provides options to retake the test or sign in to track progress.
+        - **`selectRandomQuote` Function**:
+            - Selects a random book and quote based on `activeMode` and applied filters.
+            - Ensures the quote type corresponds to the selected mode.
+            - Handles cases where the selected book does not have quotes of the desired type.
+        - **State Updates**:
+            - Uses `useEffect` to select a new quote when filters or `activeMode` change.
+            - Resets `currentBook` if it no longer matches the applied filters.
 - **FilterModal**:
-    - Allows users to filter books based on title, author, or language.
-    - Provides autocomplete suggestions for title and author.
-    - Displays available languages as a radio-button list.
-    - Shows a list of filtered books with options to load more.
-    - Uses `useMemo` to optimize expensive computations.
-    - Updates the `filteredBooksData` in `App.tsx` upon applying filters.
-- **Footer**:
-    - Contains any footer content or links.
+    - **Features**:
+        - **Multi-Select Filters**:
+            - Title, Author, and Language fields support multiple selections.
+        - **Available Books Section**:
+            - Displays books matching the applied filters.
+            - Users can select a specific book.
+        - **Reset Filters**:
+            - Clears all selected filters.
+    - **Optimization**:
+        - **Memoization**:
+            - Uses `useMemo` and `useCallback` to optimize expensive computations and functions.
+        - **Abstracted Filtering Logic**:
+            - Created a generic `computeFilteredOptions` function to handle filtering.
+            - Reduces code duplication and simplifies adding new filters.
+        - **Referential Stability**:
+            - Ensures function and data references remain stable to prevent unnecessary re-renders.
+- **Other Components**:
+    - **TypingArea**:
+        - Manages typing logic and statistics.
+        - Provides real-time feedback and updates.
+    - **Results**:
+        - Displays detailed typing statistics and interactive graphs.
+    - **CustomTable**:
+        - Used in `FilterModal` to display the list of available books.
+        - Handles selection of a specific book.
+    - **Header**, **Footer**, **Main**:
+        - Organize the layout and provide navigation and additional information.
 
 ### **Key Design Principles**
 
-- **Modularity**: Components are designed to be reusable and self-contained.
-- **Separation of Concerns**: Logic for data fetching, state management, UI rendering, and user interactions is appropriately divided.
-- **Type Safety**: TypeScript is used throughout the application to ensure type safety and reduce runtime errors.
+- **Modularity and Reusability**:
+    - Components are designed to be self-contained and reusable.
+- **Separation of Concerns**:
+    - Logic for data fetching, state management, and UI rendering is appropriately divided.
+- **Type Safety and Code Quality**:
+    - TypeScript is used throughout to ensure type safety.
+    - Linter and formatter configurations enforce coding standards.
 - **Performance Optimization**:
-    - **Memoization**: `useMemo` and `useCallback` hooks are used to optimize performance by memoizing expensive calculations and functions.
-    - **Efficient Data Handling**: Data is fetched once and reused, with unnecessary re-fetching avoided.
-- **User Experience**:
-    - **Responsive Design**: Ensures the application is usable on various screen sizes.
-    - **Accessibility**: Focus management and keyboard event handling are implemented to improve accessibility.
-    - **Real-Time Feedback**: Users receive immediate visual feedback on their typing performance.
-    - **Visual Enhancements**: Animated loading screen and smooth transitions improve the user experience.
-
-### **Data Handling with AWS Amplify**
-
-- **Backend Integration**:
-    - Uses AWS Amplify to interact with backend services, fetching book data and quotes.
-- **Data Cleaning**:
-    - Filters out `null` or `undefined` values from the fetched data to maintain data integrity.
-- **Error Handling**:
-    - Implements error states to inform users when data fetching fails or no data is available.
-    - Provides feedback when no books match the selected filters.
-
-### **Styling and Theming**
-
-- **CSS Modules**:
-    - Each component has its own CSS file for modular styling.
-- **Theming**:
-    - Consistent color schemes and fonts are used throughout the application.
-- **Visual Indicators**:
-    - Typing statuses (correct, incorrect, current) are visually distinguished.
-    - Focused elements provide visual cues to enhance user interaction.
-    - Graphs are styled to match the application's theme.
+    - **Memoization**:
+        - `useMemo` and `useCallback` are extensively used.
+        - Memoized computations and functions prevent unnecessary re-renders.
+    - **Referential Stability**:
+        - Ensured by avoiding inline functions and objects in JSX.
+        - Functions and data passed to child components maintain stable references.
+- **User Experience Enhancements**:
+    - **Filter Modal Usability**:
+        - Users can easily filter and browse books.
+        - The reset filters button enhances usability.
+    - **Accessibility**:
+        - Focus management and keyboard interactions are implemented.
+        - Visual indicators provide feedback on interactive elements.
+    - **Visual Feedback**:
+        - Loading animations and progress indicators enhance the experience.
 
 ---
 
@@ -322,7 +344,8 @@ EchoType is built using React and TypeScript, following a component-based archit
 - **React** with **TypeScript**: For building the user interface.
 - **AWS Amplify**: For data fetching and backend services.
 - **Recharts**: For rendering interactive graphs and charts.
-- **CSS**: For styling components.
+- **Material-UI (MUI)**: For UI components and styling.
+- **CSS**: For custom styling.
 - **HTML5** and **ES6+ JavaScript**.
 
 ---
@@ -337,7 +360,7 @@ Contributions are welcome! Please follow these steps:
 4. **Push** to the branch: `git push origin feature/YourFeature`.
 5. **Open** a pull request.
 
-Please make sure your code adheres to the project's coding standards and includes appropriate tests.
+Please ensure your code adheres to the project's coding standards and includes appropriate documentation and tests.
 
 ---
 
@@ -349,7 +372,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## **Acknowledgements**
 
-- **[Project Gutenberg](https://www.gutenberg.org/)**: The quotes and literary texts used in this application are sourced from Project Gutenberg. Project Gutenberg is a library of over 70,000 free eBooks, offering a vast collection of literary works in the public domain.
+- **[Project Gutenberg](https://www.gutenberg.org/)**: The quotes and literary texts used in this application are sourced from Project Gutenberg, a library of over 70,000 free eBooks in the public domain.
+- **Contributors**: Thanks to all contributors who have helped improve EchoType.
 
 ---
 

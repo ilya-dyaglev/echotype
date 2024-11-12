@@ -169,3 +169,11 @@
     outline: none;
 }
 
+.MuiAutocomplete-tag {
+    background: #4CAF50 !important;
+    color: #fff !important;
+}
+
+.MuiInputLabel-outlined	{
+    color: #fff !important;
+}

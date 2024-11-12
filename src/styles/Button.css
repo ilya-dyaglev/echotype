@@ -16,6 +16,16 @@ button:focus{
     outline: none;
 }
 
+.browse {
+    background-color: #4CAF50;
+    width: 15rem;
+    height: 2rem;
+}
+
+.browse:hover {
+    color: #FFF;
+}
+
 .next-book {
     background-color:#4caf50;
 }

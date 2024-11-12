@@ -76,25 +76,15 @@
     gap: 1rem;
 }
 
-.buttons button {
-    font-size: 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    width: 16em;
-    height: 2em;
-}
-
 .buttons button:hover {
     cursor: pointer;
 }
 
-.buttons button:first-child {
-    background-color: #293038;
-    color: #fff;
-}
-
-.buttons button:last-child {
+.buttons button {
+    width: 15rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    height: 2rem;
     background-color: #2194F2;
     color: #fff;
 }
