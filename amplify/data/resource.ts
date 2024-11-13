@@ -29,29 +29,6 @@ const schema = a
                 feedbackContent: a.string().required(),
             })
             .identifier(["feedbackId"]),
-        Users: a
-            .model({
-                createdAt: a.datetime().required(),
-                updatedAt: a.datetime().required(),
-                userId: a.string().required(),
-                userAlias: a.string().required(),
-                userEmail: a.string().required(),
-                userPassword: a.string().required(),
-            })
-            .identifier(["userId"]),
-        TypingSessions: a
-            .model({
-                createdAt: a.datetime().required(),
-                updatedAt: a.datetime().required(),
-                sessionId: a.string().required(),
-                userId: a.string().required(),
-                bookId: a.string().required(),
-                speed: a.integer().required(),
-                accuracy: a.float().required(),
-                characters: a.integer().required(),
-                typingDuration: a.float().required(),
-            })
-            .identifier(["sessionId"]),
     })
     .authorization((allow) => [allow.publicApiKey()]) // Allow public access using Api key (for demo)
 
