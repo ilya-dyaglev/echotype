@@ -18,6 +18,7 @@
     "aws-amplify": "^6.8.0",
     "aws-sdk": "^2.1691.0",
     "axios": "^1.7.2",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "node-fetch": "^3.3.2",
     "openai": "^4.71.1",
@@ -26,6 +27,7 @@
     "react-router-dom": "^6.25.1",
     "recharts": "^2.13.3",
     "typescript-eslint": "^8.13.0",
+    "uuid": "^11.0.3",
     "uuidv7": "^1.0.2"
   },
   "devDependencies": {

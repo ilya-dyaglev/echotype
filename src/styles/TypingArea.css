@@ -11,7 +11,7 @@
     padding: 1rem;
     outline: none;
     cursor: text;
-    overflow: auto; /* Enable scrolling if content overflows */
+    overflow-x: hidden; /* Enable scrolling if content overflows */
 }
 
 /* Focused State */

@@ -17,14 +17,20 @@ button:focus{
 }
 
 .browse {
-    background-color: #4CAF50;
     width: 15rem;
     height: 2rem;
+    background-color: #4CAF50;
+}
+
+.btn-feedback {
+   width: 10rem;
+   height: 2rem;
 }
 
 .browse:hover {
     color: #FFF;
 }
+
 
 .next-book {
     background-color:#4caf50;
@@ -34,6 +40,8 @@ button:focus{
     color: #FFF;
     opacity: 0.8;
 }
+
+.btn
 
 .btn-label {
     display: -webkit-box;
@@ -48,7 +56,7 @@ button:focus{
     line-height: 1.3125rem;
 }
 
-.btn.primary {
+.btn.primary, .btn-feedback {
     background-color: #fff;
     color: #1c2126;
 }

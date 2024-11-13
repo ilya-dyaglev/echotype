@@ -11,6 +11,7 @@ import type { Schema } from '../amplify/data/resource';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import {FeedbackData} from "./types.ts";
 
 // Generate the client for data fetching
 const client = generateClient<Schema>();
@@ -144,64 +145,16 @@ function App() {
             long: 'largeQuotes',
         } as const;
 
-        let quoteType = modeMapping[activeMode];
+        const quoteType = modeMapping[activeMode];
 
-        let book = currentBook;
+        let book = selectedBook || currentBook;
 
-        // If a specific book is selected, use it
-        if (selectedBook) {
-            book = selectedBook;
-            setCurrentBook(book);
-
-            // Try to get quotes of the desired type
-            let quotes = book[quoteType];
-
-            // If there are no quotes of the desired type, try to get quotes of any type
-            if (!quotes || quotes.length === 0) {
-                quotes = [
-                    ...book.smallQuotes,
-                    ...book.mediumQuotes,
-                    ...book.largeQuotes,
-                ];
-
-                // Optionally, adjust the activeMode to match the available quotes
-                if (book.smallQuotes.length > 0) {
-                    quoteType = 'smallQuotes';
-                } else if (book.mediumQuotes.length > 0) {
-                    quoteType = 'mediumQuotes';
-                } else if (book.largeQuotes.length > 0) {
-                    quoteType = 'largeQuotes';
-                } else {
-                    // No quotes available in the selected book
-                    setCurrentQuote(null);
-                    return;
-                }
-            }
-
-            // Select a random quote from the available quotes
-            if (quotes && quotes.length > 0) {
-                const randomIndex = Math.floor(Math.random() * quotes.length);
-                setCurrentQuote(quotes[randomIndex]);
-            } else {
-                // No quotes available in the selected book
-                setCurrentQuote(null);
-            }
-
-            return;
-        }
-
-        // If currentBook is not in dataToUse, reset it
-        if (book && !dataToUse.some((b) => b.bookId === book?.bookId)) {
-            book = null;
-            setCurrentBook(null);
-        }
-
-        // If no currentBook or forceNewBook is true, select a new book
         if (!book || forceNewBook) {
             // Filter books that have quotes of the desired type
             const booksWithQuotes = dataToUse.filter(
                 (b) => b[quoteType] && b[quoteType].length > 0
             );
+
             if (booksWithQuotes.length === 0) {
                 // No books have quotes of the selected type
                 setCurrentQuote(null);
@@ -215,35 +168,22 @@ function App() {
             setCurrentBook(book);
         }
 
-        // Attempt to get quotes of the selected type from the current book
+        // Get quotes of the selected type from the current book
         let quotes = book[quoteType];
 
-        // If the current book doesn't have quotes of the selected type, find another book
+        // If no quotes of the desired type, try other types
         if (!quotes || quotes.length === 0) {
-            const booksWithQuotes = dataToUse.filter(
-                (b) => b[quoteType] && b[quoteType].length > 0
-            );
-            if (booksWithQuotes.length === 0) {
-                // No books have quotes of the selected type
+            quotes = [...book.smallQuotes, ...book.mediumQuotes, ...book.largeQuotes];
+            if (quotes.length === 0) {
+                // No quotes available in the selected book
                 setCurrentQuote(null);
-                setCurrentBook(null);
                 return;
             }
-
-            // Select a new book from those that have the desired quote type
-            const randomBookIndex = Math.floor(Math.random() * booksWithQuotes.length);
-            book = booksWithQuotes[randomBookIndex];
-            setCurrentBook(book);
-            quotes = book[quoteType];
         }
 
-        // Select a random quote from the quotes array
-        if (quotes && quotes.length > 0) {
-            const randomIndex = Math.floor(Math.random() * quotes.length);
-            setCurrentQuote(quotes[randomIndex]);
-        } else {
-            setCurrentQuote(null);
-        }
+        // Select a random quote from the available quotes
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        setCurrentQuote(quotes[randomIndex]);
     };
 
     /**
@@ -311,6 +251,22 @@ function App() {
         }
     };
 
+    const handleFeedbackSubmit = async (feedbackData: FeedbackData) => {
+        try {
+            const { errors, data: newFeedback } = await client.models.FeedbackData.create(
+                feedbackData
+            );
+
+            if (errors) {
+                console.error('Feedback submission errors:', errors);
+            } else {
+                console.log('Feedback submitted successfully:', newFeedback);
+            }
+        } catch (e) {
+            console.error('Error submitting feedback:', e);
+        }
+    };
+
     // Handle loading state
     if (loading) {
         return (
@@ -330,7 +286,7 @@ function App() {
                 Error: {error}
             </Typography>
         );
-
+    
     return (
         <div className="container">
             {/* Header component with mode selection */}
@@ -361,7 +317,7 @@ function App() {
             )}
 
             {/* Footer component */}
-            <Footer />
+            <Footer submitFeedback={handleFeedbackSubmit} />
         </div>
     );
 }

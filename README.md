@@ -10,6 +10,8 @@ An open-source typing practice application that uses literary quotes to help use
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [Architecture and Design](#architecture-and-design)
+    - [Frontend Architecture](#frontend-architecture)
+    - [Backend Architecture](#backend-architecture)
 - [Technologies Used](#technologies-used)
 - [Contributing](#contributing)
 - [License](#license)
@@ -47,16 +49,20 @@ An open-source typing practice application that uses literary quotes to help use
     - Typing statistics updated in real-time.
 - **Book Information**:
     - Displays detailed information about the book, including title, author, language, and release date.
+- **Feedback Submission**:
+    - **User Feedback Modal**:
+        - Allows users to submit feedback directly from the application.
+        - Feedback is stored securely in the backend for further review.
+    - **Data Privacy**:
+        - Users must agree to the processing of personal data before submitting feedback.
+        - Feedback includes a unique ID and timestamp but does not require user authentication.
 - **Loading Animation**:
     - An animated loading screen provides visual feedback during data fetching.
-- **Responsive Design**:
-    - Optimized for both desktop and mobile devices.
 - **Performance Optimization**:
     - Utilizes React's `useMemo` and `useCallback` hooks for efficient rendering.
     - Memoization of computations and functions to enhance performance.
 - **Accessibility**:
     - Focus management and keyboard event handling improve accessibility.
-    - Visual indicators and ARIA attributes enhance user experience for all users.
 
 ---
 
@@ -95,9 +101,9 @@ Using yarn:
 yarn install
 ```
 
-### **Configure AWS Amplify (Optional)**
+### **Configure AWS Amplify**
 
-If you plan to use AWS Amplify for data fetching, configure it by initializing Amplify:
+If you plan to use AWS Amplify for data fetching and backend services, configure it by initializing Amplify:
 
 ```bash
 amplify init
@@ -142,7 +148,7 @@ The application will run on `http://localhost:3000` by default.
 - **Results Screen**:
     - Displays your typing statistics upon completion.
     - Provides interactive graphs showing typing speed and accuracy over time.
-    - Options to retake the test or sign in to track progress.
+    - Options to retake the test.
 - **Filter Modal**:
     - Accessed via the "Browse Books" button.
     - **Features**:
@@ -159,6 +165,14 @@ The application will run on `http://localhost:3000` by default.
         3. View the available books in the list.
         4. Optionally select a specific book from the list.
         5. Click "Apply Filters" to update the quotes based on your selection.
+- **Feedback Submission**:
+    - Accessed via the "Feedback" option in the footer.
+    - **How to Submit Feedback**:
+        1. Click on the "Feedback" link in the footer.
+        2. A modal will appear prompting you to enter your feedback.
+        3. Provide your feedback in the text area.
+        4. Check the box to agree to the processing of your personal data.
+        5. Click "Submit Feedback" to send your feedback.
 - **Progress Bar**:
     - Shows your progress through the quote.
 - **Book Information**:
@@ -189,6 +203,15 @@ The application will run on `http://localhost:3000` by default.
 
 ```
 echotype/
+├── amplify/
+│   ├── backend/
+│   │   ├── data/
+│   │   │   └── resource.ts
+│   │   ├── jobs/
+│   │   │   └── bookScrapper/
+│   │   │       ├── handler.ts
+│   │   │       └── resource.ts
+│   │   └── backend.ts
 ├── public/
 ├── src/
 │   ├── components/
@@ -200,6 +223,7 @@ echotype/
 │   │   ├── TypingArea.tsx
 │   │   ├── Results.tsx
 │   │   ├── FilterModal.tsx
+│   │   ├── FeedbackModal.tsx
 │   │   ├── CustomTable.tsx
 │   │   ├── ProgressContainer.tsx
 │   │   └── Footer.tsx
@@ -210,19 +234,24 @@ echotype/
 │   │   ├── TypingArea.css
 │   │   ├── Results.css
 │   │   ├── FilterModal.css
+│   │   ├── FeedbackModal.css
 │   │   ├── CustomTable.css
 │   │   └── Main.css
+│   ├── types.ts
 │   ├── App.tsx
-│   ├── index.tsx
+│   ├── main.tsx
 │   └── ...
 ├── package.json
 └── README.md
 ```
 
+- **amplify/**: Contains AWS Amplify backend configurations and resources.
 - **components/**: Contains all React components used in the application.
+    - **FeedbackModal.tsx**: Component for the feedback submission modal.
 - **styles/**: Contains CSS files for styling the components.
+- **types.ts**: TypeScript definitions for shared types, such as `FeedbackData`.
 - **App.tsx**: The main application component that manages state and data fetching.
-- **index.tsx**: Entry point of the React application.
+- **main.tsx**: Entry point of the React application.
 
 ---
 
@@ -230,121 +259,191 @@ echotype/
 
 ### **Overview**
 
-EchoType is built using React and TypeScript, following a component-based architecture. The application leverages AWS Amplify for data fetching, retrieving quotes from a backend service. The architecture emphasizes modularity, reusability, and separation of concerns, making it scalable and maintainable. Recent enhancements include:
+EchoType is built using React and TypeScript on the frontend and AWS Amplify for backend services. The application leverages AWS services such as DynamoDB and Lambda functions to store and process data. The architecture emphasizes modularity, scalability, and maintainability.
 
-- **Filter Modal with Advanced Filtering**:
-    - Multi-select support for titles, authors, and languages.
-    - Optimized with `useMemo` and `useCallback` for performance.
-    - Abstracted filtering logic to enable easy addition of new filters in the future.
-- **Performance Optimizations**:
-    - Memoization of computations and functions to prevent unnecessary re-renders.
-    - Ensured referential stability of functions and data using React hooks.
-- **Bug Fixes and Improvements**:
-    - Addressed issues with quote selection logic to ensure quotes are selected only from filtered books or a specifically selected book.
-    - Implemented state management enhancements to maintain consistent behavior.
+### **Frontend Architecture**
 
-### **Component Hierarchy**
-
-- **App.tsx**
-    - **Header**
-        - **Logo**
-        - **ControlBar**
-            - **Button**
-        - **CTA**
-    - **Main**
-        - **TypingArea** (conditionally rendered)
-        - **Results** (conditionally rendered)
-            - **Graphs** (using Recharts)
-    - **FilterModal** (conditionally rendered)
-        - **CustomTable**
-    - **Footer**
-
-### **Data Flow and State Management**
-
-- **App.tsx**: Central point for state management.
-    - **State Variables**:
-        - `activeMode`: Current typing mode (`short`, `medium`, `long`).
-        - `booksData`: Array of books fetched from the backend.
-        - `filteredBooksData`: Books after applying filters.
-        - `currentBook`: Currently selected book (can be `null` if no specific book is selected).
-        - `currentQuote`: The quote currently displayed for typing.
-        - `loading`, `error`: For handling data fetching states.
-        - `isFilterModalOpen`: Controls the visibility of the filter modal.
-        - `progress`: Tracks loading progress.
-    - **Data Fetching**:
-        - Fetches book data from the backend using AWS Amplify on component mount.
-        - Cleans the data by filtering out `null` or `undefined` quotes.
-    - **Quote Selection Logic**:
-        - **`selectRandomQuote` Function**:
-            - Selects a random book and quote based on `activeMode` and applied filters.
-            - Ensures the quote type corresponds to the selected mode.
-            - Handles cases where the selected book does not have quotes of the desired type.
-        - **State Updates**:
-            - Uses `useEffect` to select a new quote when filters or `activeMode` change.
-            - Resets `currentBook` if it no longer matches the applied filters.
-- **FilterModal**:
-    - **Features**:
-        - **Multi-Select Filters**:
-            - Title, Author, and Language fields support multiple selections.
-        - **Available Books Section**:
-            - Displays books matching the applied filters.
-            - Users can select a specific book.
-        - **Reset Filters**:
-            - Clears all selected filters.
-    - **Optimization**:
-        - **Memoization**:
-            - Uses `useMemo` and `useCallback` to optimize expensive computations and functions.
-        - **Abstracted Filtering Logic**:
-            - Created a generic `computeFilteredOptions` function to handle filtering.
-            - Reduces code duplication and simplifies adding new filters.
-        - **Referential Stability**:
-            - Ensures function and data references remain stable to prevent unnecessary re-renders.
-- **Other Components**:
-    - **TypingArea**:
-        - Manages typing logic and statistics.
-        - Provides real-time feedback and updates.
-    - **Results**:
-        - Displays detailed typing statistics and interactive graphs.
-    - **CustomTable**:
-        - Used in `FilterModal` to display the list of available books.
-        - Handles selection of a specific book.
-    - **Header**, **Footer**, **Main**:
-        - Organize the layout and provide navigation and additional information.
-
-### **Key Design Principles**
-
-- **Modularity and Reusability**:
-    - Components are designed to be self-contained and reusable.
-- **Separation of Concerns**:
-    - Logic for data fetching, state management, and UI rendering is appropriately divided.
-- **Type Safety and Code Quality**:
-    - TypeScript is used throughout to ensure type safety.
-    - Linter and formatter configurations enforce coding standards.
+- **Component-Based Structure**: React components are organized logically to promote reusability and separation of concerns.
+- **State Management**: Uses React hooks like `useState`, `useEffect`, `useMemo`, and `useCallback` for efficient state and side-effect management.
+- **Data Fetching**: Integrates with AWS Amplify to fetch data from the backend services.
+- **Feedback Submission**:
+    - **FeedbackModal Component**:
+        - Allows users to submit feedback via a modal form.
+        - Validates user input and ensures data privacy compliance.
+        - Utilizes TypeScript interfaces (`FeedbackData`) for type safety.
+    - **Integration in App.tsx**:
+        - The `handleFeedbackSubmit` function processes the feedback data and sends it to the backend.
+        - Feedback is stored in the `FeedbackData` table in DynamoDB.
 - **Performance Optimization**:
-    - **Memoization**:
-        - `useMemo` and `useCallback` are extensively used.
-        - Memoized computations and functions prevent unnecessary re-renders.
-    - **Referential Stability**:
-        - Ensured by avoiding inline functions and objects in JSX.
-        - Functions and data passed to child components maintain stable references.
-- **User Experience Enhancements**:
-    - **Filter Modal Usability**:
-        - Users can easily filter and browse books.
-        - The reset filters button enhances usability.
-    - **Accessibility**:
-        - Focus management and keyboard interactions are implemented.
-        - Visual indicators provide feedback on interactive elements.
-    - **Visual Feedback**:
-        - Loading animations and progress indicators enhance the experience.
+    - Memoization of computations and functions to prevent unnecessary re-renders.
+    - Referential stability of functions and data using React hooks.
+
+### **Backend Architecture**
+
+#### **Overview**
+
+The backend is built using AWS Amplify and consists of several AWS services:
+
+- **AWS Lambda Functions**: For serverless compute, handling tasks like data processing and scheduled jobs.
+- **AWS DynamoDB**: A NoSQL database for storing book metadata, quotes, and user feedback.
+- **AWS Amplify**: Simplifies the process of configuring AWS services and integrates them with the frontend.
+
+#### **Backend Structure**
+
+```
+amplify/
+├── backend.ts
+├── data/
+│   └── resource.ts
+└── jobs/
+    └── bookScrapper/
+        ├── handler.ts
+        └── resource.ts
+```
+
+- **backend.ts**: The main configuration file that defines backend resources.
+- **data/**: Contains data models and schema definitions.
+- **jobs/**: Contains AWS Lambda functions for scheduled jobs, such as the book scraper.
+
+#### **AWS Amplify Backend Setup**
+
+##### **backend.ts**
+
+```typescript
+import { defineBackend } from '@aws-amplify/backend';
+import { data } from './data/resource';
+import { bookScrapper } from './jobs/bookScrapper/resource';
+
+export const backend = defineBackend({
+  data,
+  bookScrapper,
+});
+```
+
+- **Purpose**: Defines the backend resources using AWS Amplify.
+- **Resources**:
+    - **data**: Data models and storage configurations.
+    - **bookScrapper**: Scheduled job to populate the database with book data.
+
+#### **Data Schema**
+
+##### **data/resource.ts**
+
+Defines the data models and schemas used in the application.
+
+```typescript
+import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+
+const schema = a.schema({
+  BookMetadata: a.model({
+    bookId: a.id().required(),
+    sourceId: a.integer().required(),
+    sourceUrl: a.string().required(),
+    title: a.string().required(),
+    author: a.string().required(),
+    releaseDate: a.datetime().required(),
+    language: a.string().required(),
+    license: a.string().required(),
+    smallQuotes: a.string().array().required(),
+    mediumQuotes: a.string().array().required(),
+    largeQuotes: a.string().array().required(),
+    createdAt: a.datetime().required(),
+    updatedAt: a.datetime().required(),
+  }).identifier(['bookId']),
+  FeedbackData: a.model({
+    feedbackId: a.string().required(),
+    userId: a.string().nullable(),
+    emailDestination: a.string().required(),
+    feedbackContent: a.string().required(),
+    createdAt: a.datetime().required(),
+    updatedAt: a.datetime().required(),
+  }).identifier(['feedbackId']),
+}).authorization((allow) => [allow.publicApiKey()]);
+
+export type Schema = ClientSchema<typeof schema>;
+
+export const data = defineData({
+  schema,
+  authorizationModes: {
+    defaultAuthorizationMode: 'apiKey',
+    apiKeyAuthorizationMode: {
+      expiresInDays: 30,
+    },
+  },
+});
+```
+
+- **Models**:
+    - **BookMetadata**: Stores metadata and quotes for books.
+        - Fields: `bookId`, `sourceId`, `sourceUrl`, `title`, `author`, `releaseDate`, `language`, `license`, `smallQuotes`, `mediumQuotes`, `largeQuotes`, `createdAt`, `updatedAt`.
+    - **FeedbackData**: Stores user feedback submissions.
+        - Fields: `feedbackId`, `userId` (nullable), `emailDestination`, `feedbackContent`, `createdAt`, `updatedAt`.
+- **Authorization**:
+    - Allows public access using an API key (for demo purposes).
+    - API key is set to expire in 30 days.
+
+#### **Feedback Submission Flow**
+
+- **Frontend**:
+    - **FeedbackModal Component**:
+        - Collects feedback content and ensures the user agrees to data processing.
+        - Generates a unique `feedbackId` using UUID.
+        - Captures timestamps for `createdAt` and `updatedAt`.
+        - Submits the feedback data to the `handleFeedbackSubmit` function in `App.tsx`.
+- **Backend**:
+    - **Data Storage**:
+        - Feedback data is stored in the `FeedbackData` DynamoDB table.
+        - Includes fields like `feedbackId`, `userId` (set to `null` if not authenticated), and `feedbackContent`.
+    - **Security**:
+        - Data is transmitted securely via AWS Amplify's API.
+        - No personal user data is stored unless provided in the feedback content.
+
+#### **Scheduled Job: Book Scraper**
+
+A scheduled AWS Lambda function that fetches book data and populates the DynamoDB table.
+
+##### **jobs/bookScrapper/handler.ts**
+
+- **Functionality**:
+    - Fetches random book content from Project Gutenberg.
+    - Processes content with OpenAI GPT to generate structured book metadata and quotes.
+    - Stores data in DynamoDB.
+
+##### **jobs/bookScrapper/resource.ts**
+
+- **Purpose**: Configures the Lambda function to run on a schedule (every 15 minutes).
+- **Environment Variables**:
+    - **GPT_API_SECRET**: OpenAI API key.
+    - **DYNAMODB_TABLE_NAME**: DynamoDB table name.
+- **Timeout**: Sets the function timeout to 120 seconds.
+
+#### **AWS Resources Used**
+
+- **AWS Lambda**: Runs serverless functions for data processing and scheduled tasks.
+- **AWS DynamoDB**: Stores book metadata, quotes, and user feedback.
+- **AWS Amplify**: Orchestrates the configuration and deployment of AWS resources.
+
+#### **Security and Authorization**
+
+- **Public API Key**: For demo purposes, the application uses a public API key for accessing data.
+- **Environment Variables**: Sensitive information like API keys are stored securely and accessed via environment variables.
+- **Data Privacy**:
+    - Users must agree to data processing before submitting feedback.
+    - Feedback data is stored securely and only includes personal information if provided by the user.
 
 ---
 
 ## **Technologies Used**
 
 - **React** with **TypeScript**: For building the user interface.
-- **AWS Amplify**: For data fetching and backend services.
+- **AWS Amplify**: For backend services, including data storage and serverless functions.
+- **AWS Lambda**: For running serverless functions.
+- **AWS DynamoDB**: For NoSQL database storage.
+- **OpenAI GPT**: For generating book metadata and quotes.
 - **Recharts**: For rendering interactive graphs and charts.
 - **Material-UI (MUI)**: For UI components and styling.
+- **UUID**: For generating unique identifiers.
+- **Day.js**: For date and time formatting.
 - **CSS**: For custom styling.
 - **HTML5** and **ES6+ JavaScript**.
 
@@ -373,6 +472,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ## **Acknowledgements**
 
 - **[Project Gutenberg](https://www.gutenberg.org/)**: The quotes and literary texts used in this application are sourced from Project Gutenberg, a library of over 70,000 free eBooks in the public domain.
+- **[OpenAI](https://openai.com/)**: Utilized for generating book metadata and quotes using GPT models.
 - **Contributors**: Thanks to all contributors who have helped improve EchoType.
 
 ---
@@ -381,7 +481,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 For any inquiries or feedback, please contact:
 
-- **Email**: ilya.dyaglev@gmail.com
+- **Email**: [idyaglev@echotype.io](mailto:idyaglev@echotype.io)
 - **GitHub**: [ilya-dyaglev](https://github.com/ilya-dyaglev)
 
 ---

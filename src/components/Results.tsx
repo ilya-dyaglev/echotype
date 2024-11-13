@@ -125,7 +125,7 @@ const Results: React.FC<ResultsProps> = ({ typingStats, onRetake }) => {
                 </div>
             </div>
             <div className="buttons">
-                <button className={'btn'} onClick={onRetake}><span className='btn-label'>Retake</span></button>
+                <button className={'btn try-again'} onClick={onRetake}><span className='btn-label'>Try Again</span></button>
                 {/*<button className={'btn'}>Track your progress</button> I'll be able to do this someday...*/}
             </div>
         </div>

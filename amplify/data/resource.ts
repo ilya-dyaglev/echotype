@@ -1,5 +1,4 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
-import {bookScrapper} from "../jobs/bookScrapper/resource";
 
 const schema = a
     .schema({
@@ -20,12 +19,39 @@ const schema = a
             updatedAt: a.datetime().required(),
           })
           .identifier(["bookId"]), // Set bookId as the identifier
-
-        UpdateDynamoDB: a
-            .mutation()
-            .returns(a.ref('BookMetadata'))
-            .handler(a.handler.function(bookScrapper).async())
-            .authorization(allow => [allow.publicApiKey()])
+        FeedbackData: a
+            .model({
+                createdAt: a.datetime().required(),
+                updatedAt: a.datetime().required(),
+                feedbackId: a.string().required(),
+                userId: a.string(),
+                emailDestination: a.string().required(),
+                feedbackContent: a.string().required(),
+            })
+            .identifier(["feedbackId"]),
+        Users: a
+            .model({
+                createdAt: a.datetime().required(),
+                updatedAt: a.datetime().required(),
+                userId: a.string().required(),
+                userAlias: a.string().required(),
+                userEmail: a.string().required(),
+                userPassword: a.string().required(),
+            })
+            .identifier(["userId"]),
+        TypingSessions: a
+            .model({
+                createdAt: a.datetime().required(),
+                updatedAt: a.datetime().required(),
+                sessionId: a.string().required(),
+                userId: a.string().required(),
+                bookId: a.string().required(),
+                speed: a.integer().required(),
+                accuracy: a.float().required(),
+                characters: a.integer().required(),
+                typingDuration: a.float().required(),
+            })
+            .identifier(["sessionId"]),
     })
     .authorization((allow) => [allow.publicApiKey()]) // Allow public access using Api key (for demo)
 
