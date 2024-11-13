@@ -18,6 +18,11 @@
     gap: 0.5rem;
 }
 
+.logo:hover,  .cta-container span:hover{
+    cursor: default;
+}
+
+
 .logo .logo-icon {
     display: flex;
     align-items: center;

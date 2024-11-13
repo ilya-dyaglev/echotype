@@ -1,0 +1,16 @@
+.unsupported-screen-size {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30vh;
+    text-align: center;
+    background-color: #1C2126;
+    color: #E5E8EB;
+}
+
+.unsupported-screen-size span {
+    font-size: 1.5rem;
+    line-height: 3rem;
+    padding: 1rem;
+}
+

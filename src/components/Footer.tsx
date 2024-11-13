@@ -37,7 +37,9 @@ const Footer: React.FC<FooterProps> = ({ submitFeedback }) => {
             </div>
             <div className="copyright-container">
                 <div className="label">
-                    built by <span>@idyaglev</span>
+                    <a href="https://www.linkedin.com/in/ilyadyaglev/">
+                        🔨 built by <span>@idyaglev</span>
+                    </a>
                 </div>
                 <div className="footer-image-icon"></div>
             </div>

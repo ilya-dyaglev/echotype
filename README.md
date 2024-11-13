@@ -56,6 +56,8 @@ An open-source typing practice application that uses literary quotes to help use
     - **Data Privacy**:
         - Users must agree to the processing of personal data before submitting feedback.
         - Feedback includes a unique ID and timestamp but does not require user authentication.
+- **Desktop-Only Support**:
+    - If the screen width is less than 1100 pixels, the application displays a message indicating that only the desktop version is supported.
 - **Loading Animation**:
     - An animated loading screen provides visual feedback during data fetching.
 - **Performance Optimization**:
@@ -133,6 +135,8 @@ The application will run on `http://localhost:3000` by default.
 
 ### **Navigating the Application**
 
+- **Desktop-Only Support**:
+    - The application is optimized for desktop devices. If your screen width is less than 1100 pixels or height less than 850, a message will be displayed indicating that only the desktop version is supported.
 - **Header**:
     - Contains the logo, typing mode selection, and a call-to-action.
     - Includes buttons to open the filter modal or fetch a new quote.
@@ -224,6 +228,7 @@ echotype/
 │   │   ├── Results.tsx
 │   │   ├── FilterModal.tsx
 │   │   ├── FeedbackModal.tsx
+│   │   ├── UnsupportedScreenSize.tsx
 │   │   ├── CustomTable.tsx
 │   │   ├── ProgressContainer.tsx
 │   │   └── Footer.tsx
@@ -235,6 +240,7 @@ echotype/
 │   │   ├── Results.css
 │   │   ├── FilterModal.css
 │   │   ├── FeedbackModal.css
+│   │   ├── UnsupportedScreenSize.css
 │   │   ├── CustomTable.css
 │   │   └── Main.css
 │   ├── types.ts
@@ -248,6 +254,7 @@ echotype/
 - **amplify/**: Contains AWS Amplify backend configurations and resources.
 - **components/**: Contains all React components used in the application.
     - **FeedbackModal.tsx**: Component for the feedback submission modal.
+    - **UnsupportedScreenSize.tsx**: Component that displays a message when the screen width is less than 1100 pixels.
 - **styles/**: Contains CSS files for styling the components.
 - **types.ts**: TypeScript definitions for shared types, such as `FeedbackData`.
 - **App.tsx**: The main application component that manages state and data fetching.
@@ -266,6 +273,13 @@ EchoType is built using React and TypeScript on the frontend and AWS Amplify for
 - **Component-Based Structure**: React components are organized logically to promote reusability and separation of concerns.
 - **State Management**: Uses React hooks like `useState`, `useEffect`, `useMemo`, and `useCallback` for efficient state and side-effect management.
 - **Data Fetching**: Integrates with AWS Amplify to fetch data from the backend services.
+- **Desktop-Only Support**:
+    - **UnsupportedScreenSize Component**:
+        - Detects the screen width and displays a message if it is less than 1100 pixels.
+        - Implemented using React's `useEffect` hook to listen for window resize events.
+        - Enhances user experience by ensuring the application is used in an optimal environment.
+    - **Integration in App.tsx**:
+        - The application conditionally renders either the main app or the `UnsupportedScreenSize` component based on screen width.
 - **Feedback Submission**:
     - **FeedbackModal Component**:
         - Allows users to submit feedback via a modal form.

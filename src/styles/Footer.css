@@ -10,7 +10,7 @@
 
 .footer .copyright-container {
     display: flex;
-    width: 9.8rem;
+    width: 12rem;
     justify-content: space-between;
     align-items: center;
 }
@@ -42,3 +42,10 @@
     border-radius: 1.25rem;
 }
 
+a, a span {
+    color: #fff !important;
+}
+
+a:hover {
+    text-decoration: underline;
+}

@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Main from './components/Main';
 import Footer from './components/Footer';
 import FilterModal from './components/FilterModal';
+import UnsupportedScreenSize from './components/UnsupportedScreenSize'; // Import the new component
 import { useEffect, useState } from 'react';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../amplify/data/resource';
@@ -11,13 +12,13 @@ import type { Schema } from '../amplify/data/resource';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import {FeedbackData} from "./types.ts";
+import { FeedbackData } from './types';
 
 // Generate the client for data fetching
 const client = generateClient<Schema>();
 
 // Constants for data fetching
-const TEST_LIMIT = 10000;
+const TEST_LIMIT = 10000; // random constant, I need to figure out how DynamoDB manages read access in prod environment
 
 // Interface for fetched data
 export interface BookData {
@@ -36,7 +37,6 @@ export interface BookData {
     updatedAt: string;
 }
 
-// Main App component
 function App() {
     // State for the active typing mode
     const [activeMode, setActiveMode] = useState<'short' | 'medium' | 'long'>('short');
@@ -64,6 +64,31 @@ function App() {
 
     // State to track progress for loading screen
     const [progress, setProgress] = useState(0);
+
+    // State to determine if the screen size is supported
+    const [isScreenSupported, setIsScreenSupported] = useState<boolean>(true);
+
+    // Effect to check screen width and update state
+    useEffect(() => {
+        const checkScreenWidth = () => {
+            if (window.innerWidth < 1100 || window.innerHeight <= 850) {
+                setIsScreenSupported(false);
+            } else {
+                setIsScreenSupported(true);
+            }
+        };
+
+        // Initial check
+        checkScreenWidth();
+
+        // Add event listener for window resize
+        window.addEventListener('resize', checkScreenWidth);
+
+        // Cleanup the event listener on unmount
+        return () => {
+            window.removeEventListener('resize', checkScreenWidth);
+        };
+    }, []);
 
     /**
      * Fetches data from the backend API on component mount
@@ -279,14 +304,20 @@ function App() {
         );
     }
 
+    // Handle unsupported screen size
+    if (!isScreenSupported) {
+        return <UnsupportedScreenSize />;
+    }
+
     // Handle error state
-    if (error)
+    if (error) {
         return (
             <Typography variant="body1" color="error" align="center" sx={{ mt: 4 }}>
                 Error: {error}
             </Typography>
         );
-    
+    }
+
     return (
         <div className="container">
             {/* Header component with mode selection */}
@@ -307,7 +338,9 @@ function App() {
             )}
 
             {/* Button to open filter modal */}
-            <button className={'btn browse'} onClick={handleOpenFilterModal}> <span className={'btn-label'}>Browse All Books</span></button>
+            <button className="btn browse" onClick={handleOpenFilterModal}>
+                <span className="btn-label">Browse All Books</span>
+            </button>
             {isFilterModalOpen && (
                 <FilterModal
                     booksData={booksData}

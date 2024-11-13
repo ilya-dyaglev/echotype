@@ -74,7 +74,7 @@ const Main: React.FC<MainProps> = ({ currentQuote, currentBook, onFetchNewBook }
                 <>
                     <TypingArea textData={currentQuote} onFinish={handleTypingFinish} onFetchNewBook={onFetchNewBook} />
                     {/* Display additional information about the book */}
-                    <div>
+                    <div className="additional-info">
                         <pre>{`Title: ${currentBook.title}`}</pre>
                         <pre>{`Author: ${currentBook.author}`}</pre>
                         <pre>{`Released on: ${formatDate(currentBook.releaseDate)}`}</pre>
