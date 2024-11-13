@@ -316,7 +316,7 @@ function App() {
         return (
             <Box sx={{ width: '100%', mt: 4 }}>
                 <LinearProgress variant="determinate" value={progress} />
-                <Typography variant="body1" align="center" sx={{ mt: 2 }}>
+                <Typography variant="body1" align="center" sx={{ width: '25rem' }}>
                     Loading...
                 </Typography>
             </Box>

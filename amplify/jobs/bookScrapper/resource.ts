@@ -4,7 +4,7 @@ import { secret } from "@aws-amplify/backend";
 const GPT_API_SECRET = secret('GPT_API_SECRET') ?? "";
 const DYNAMODB_TABLE_NAME = secret('DYNAMODB_TABLE_NAME') ?? "";
 const TABLE_NAME_LOCAL = secret('TABLE_NAME_LOCAL') ?? "";
-const minutesFrequency = 59;
+const minutesFrequency = 15;
 
 if (!GPT_API_SECRET) {
     throw new Error('GPT_API_SECRET is not defined');
